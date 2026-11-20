@@ -1,0 +1,17 @@
+import assert from 'node:assert/strict';
+import {cloudTimesURL,cloudDomainTimes,imergTimesURL,imergDomainTimes,mergeCloudTimes,CLOUD_CADENCE} from './dist/satellite-times.js';
+const now=Date.UTC(2026,9,7,6,53),domain='2026-10-07T00:50:00Z/2026-10-07T06:30:00Z/PT10M';
+const times=cloudDomainTimes(domain,now);assert.equal(times.length,31);assert.equal(times.at(-1),'2026-10-07T06:30:00Z');assert.equal(Date.parse(times.at(-1))-Date.parse(times[0]),5*3600000);
+const u=cloudTimesURL(now),v=cloudTimesURL(now+CLOUD_CADENCE);assert.notEqual(u,v);assert.notEqual(u,cloudTimesURL(now+60000));assert(!u.includes('%3A')&&!u.includes('%2F'));assert.equal(new URL(u).searchParams.get('TIME'),'2026-10-07T00:53:00Z/2026-10-07T06:53:00Z');assert.equal(new URL(u).hostname,'gibs.earthdata.nasa.gov');
+const older=cloudDomainTimes('2026-10-07T02:50:00Z/2026-10-07T05:40:00Z/PT10M',now);assert.equal(mergeCloudTimes(times,older).at(-1),times.at(-1));assert.equal(mergeCloudTimes(times,older).length,31);
+const gaps=cloudDomainTimes('2026-10-07T05:00:00Z/2026-10-07T05:20:00Z/PT10M,2026-10-07T05:40:00Z/2026-10-07T06:00:00Z/PT10M',now);assert(!gaps.includes('2026-10-07T05:30:00Z'));assert(!cloudDomainTimes('2026-10-07T06:30:00Z/2026-10-07T07:30:00Z/PT10M',now).some(t=>Date.parse(t)>now));
+const updatedGaps=cloudDomainTimes('2026-10-07T05:00:00Z/2026-10-07T05:20:00Z/PT10M,2026-10-07T05:40:00Z/2026-10-07T06:40:00Z/PT10M',now);assert(!mergeCloudTimes(times,updatedGaps).includes('2026-10-07T05:30:00Z'));
+assert.throws(()=>cloudDomainTimes(''));assert.throws(()=>cloudDomainTimes('2026-10-07T06:30:00Z/2026-10-07T05:30:00Z/PT10M',now));assert.throws(()=>cloudDomainTimes('2026-10-07T05:00:00Z/2026-10-07T06:00:00Z/PT5M',now));
+console.log('Per-layer fresh time query, 31 real frames, missing gaps, no future observations and no backward refresh passed.');
+const rainNow=Date.UTC(2026,9,8,7,47),rain=imergDomainTimes('2026-10-07T08:00:00Z/2026-10-08T02:30:00Z/PT30M',rainNow);
+assert.equal(rain.length,11);assert.equal(rain.at(-1),'2026-10-08T02:30:00Z');assert.equal(rain[0],'2026-10-07T21:30:00Z');
+assert.equal(new URL(imergTimesURL(rainNow)).searchParams.get('LAYER'),'IMERG_Precipitation_Rate_30min');assert.notEqual(imergTimesURL(rainNow),imergTimesURL(rainNow+60000));
+const rainGaps=imergDomainTimes('2026-10-08T01:00:00Z/2026-10-08T01:30:00Z/PT30M,2026-10-08T02:30:00Z',rainNow);assert(!rainGaps.includes('2026-10-08T02:00:00Z'));
+assert(imergDomainTimes('2026-10-08T07:00:00Z/2026-10-08T08:30:00Z/PT30M',rainNow).every(t=>Date.parse(t)<=rainNow));
+assert.throws(()=>imergDomainTimes('2026-10-08T01:00:00Z/2026-10-08T02:30:00Z/PT10M',rainNow));
+console.log('IMERG independently discovers delayed half-hour publications with complete five-hour history.');

@@ -1,0 +1,23 @@
+# Himawari-9 image CDN for Lao Weather & Disaster Watch.
+# Requires the Workers Paid plan: converting one raw frame needs seconds of CPU.
+# Workers Free allows only 10 ms CPU per cron run, which cannot decode one frame.
+# Paid cron runs at intervals under one hour may use at most 30 s CPU.
+name = "lao-himawari-cdn"
+main = "src/index.mjs"
+compatibility_date = "2026-09-01"
+
+[[r2_buckets]]
+binding = "FRAMES"
+bucket_name = "lao-himawari-frames"
+
+[triggers]
+crons = ["* * * * *"]
+
+[limits]
+cpu_ms = 30000
+
+[vars]
+MAX_FRAMES_PER_RUN = "3"
+# After the site has a fixed public address, set this to that origin, e.g.
+# ALLOWED_ORIGIN = "https://your-site.example"
+ALLOWED_ORIGIN = "*"

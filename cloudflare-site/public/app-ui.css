@@ -1,0 +1,353 @@
+/* App shell (19–20 Oct 2026), built by app-shell.js, loaded last. One dark-glass look on every
+   screen size; only the layout differs.
+   Phones (≤760 px): design 3 — search row, weather card top-left, layer column right, floating
+   timeline, icon bar. Desktop (≥761 px): design 1 — brand/search/tabs/actions row, weather card
+   left, layer palette right, full-width timeline; tabs open as a dark sheet on the left. */
+/* Station history dialog (history-chart.js). */
+.hist-open{margin-top:8px;width:100%;min-height:38px;border-radius:9px;background:#eef3ff;color:#1e5bd8;font-weight:700;font-size:.8125rem}
+.history-dialog{width:min(720px,calc(100% - 16px))}
+.hist-tools{display:flex;flex-wrap:wrap;gap:8px;justify-content:space-between;margin-bottom:12px}
+.hist-seg{display:flex;gap:2px;padding:3px;background:#f1f4f8;border-radius:10px}
+.hist-seg button{min-height:36px;padding:4px 12px;border-radius:8px;background:transparent;color:#526780;font-weight:600;font-size:.8125rem}
+.hist-seg button[aria-pressed=true]{background:#fff;color:#1e5bd8;box-shadow:0 1px 3px #0b1a3222}
+.hist-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:8px}
+.hist-summary div{background:#f5f7fb;border-radius:10px;padding:8px 10px}.hist-summary b{display:block;font-size:1.05rem;color:#13243b}.hist-summary span{font-size:.75rem;color:#5d7088}
+.hist-chart{width:100%;height:auto;display:block;background:#fff;border:1px solid #e6ebf2;border-radius:10px}
+/* Share row (share.js; same rules as SHARE_CSS used by the province pages). */
+.share-row{display:flex;flex-wrap:wrap;align-items:center;gap:10px}.share-btn{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;color:#fff;border:0;cursor:pointer;text-decoration:none;padding:0}.share-btn:active{transform:scale(.94)}.share-note{flex-basis:100%;font-size:12.5px;color:#7ee2a8;min-height:1em}
+.share-panel .share-what{margin:-2px 0 10px}
+/* Links to the province weather pages (weather panel). */
+.province-chips{display:flex;flex-wrap:wrap;gap:6px}.province-chips a{border-radius:999px;padding:5px 11px;font-size:.8125rem;background:#eef3ff;color:#1e5bd8;text-decoration:none}
+body.app-c .control-dock .province-chips a{background:rgba(255,255,255,.07);color:#cfe0f5}
+/* 7-day outlook: days 4–7 are a trend only (lighter, dashed). */
+.day.trend{border-style:dashed;background:#fafbfd}.day.trend .day-temp,.day.trend .day-rain,.day.trend .day-icon{opacity:.62}.day.trend .day-tag{color:#8a6d1f}
+.app-top,.app-weather,.app-palette,.app-layers-more,.app-note-m,.app-mode-select{display:none}
+/* Until the shell is set up (body.app-boot, removed by app-shell.js): hide the pieces it moves or restyles, so the old layout never flashes. */
+body.app-boot .quick-layers,body.app-boot .alert-banner,body.app-boot .mobile-nav button>span{visibility:hidden!important}
+body.app-c #map{background:#0b1220}
+/* ---------------- Shared dark-glass theme (all sizes) ---------------- */
+body.app-c .app-layers-more,body.app-c .app-palette .quick-layers .app-layers-more{display:none!important}
+body.app-c{--glass:rgba(13,21,35,.76);--glass-2:rgba(255,255,255,.06);--glass-b:rgba(255,255,255,.1);--g-text:#e9eef6;--g-muted:#9fb0c6;--g-accent:#3b82f6;--g-shadow:0 10px 30px rgba(0,0,0,.35);--gap:20px}
+/* Dam card (option C): dark glass popup, water path drawn top to bottom. */
+.dam-pop .maplibregl-popup-content{background:rgba(13,21,35,.94);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);color:#e9eef6;border:1px solid rgba(255,255,255,.1);border-radius:16px;box-shadow:0 14px 34px rgba(0,0,0,.45);padding:14px 14px 12px;font-size:12.5px;line-height:1.45}
+.dam-pop.maplibregl-popup-anchor-bottom .maplibregl-popup-tip,.dam-pop.maplibregl-popup-anchor-bottom-left .maplibregl-popup-tip,.dam-pop.maplibregl-popup-anchor-bottom-right .maplibregl-popup-tip{border-top-color:rgba(13,21,35,.94)}
+.dam-pop.maplibregl-popup-anchor-top .maplibregl-popup-tip,.dam-pop.maplibregl-popup-anchor-top-left .maplibregl-popup-tip,.dam-pop.maplibregl-popup-anchor-top-right .maplibregl-popup-tip{border-bottom-color:rgba(13,21,35,.94)}
+.dam-pop.maplibregl-popup-anchor-left .maplibregl-popup-tip{border-right-color:rgba(13,21,35,.94)}.dam-pop.maplibregl-popup-anchor-right .maplibregl-popup-tip{border-left-color:rgba(13,21,35,.94)}
+.dam-pop .maplibregl-popup-close-button{top:8px;right:8px;width:24px;height:24px;border-radius:8px;background:rgba(255,255,255,.08);color:#9fb0c6;font-size:16px;line-height:22px}
+.dam-card .dam-name{display:block;font-size:15px;padding-right:28px}
+.dam-card .dam-sub{color:#9fb0c6;font-size:11.5px;margin:1px 0 0}
+.dam-flow{list-style:none;margin:12px 0 0;padding:0 0 0 22px;position:relative}
+.dam-flow::before{content:'';position:absolute;left:7px;top:8px;bottom:8px;width:3px;border-radius:2px;background:linear-gradient(#0ea5e9,#f97316)}
+.dam-node{position:relative;margin:0 0 10px}.dam-node:last-child{margin-bottom:0}
+.dam-node::before{content:'';position:absolute;left:-20px;top:3px;width:12px;height:12px;border-radius:50%;background:#34d399;box-shadow:0 0 0 2px rgba(13,21,35,.94)}
+.dam-node.dam-top::before{left:-21px;top:2px;width:14px;height:14px;border-radius:4px;background:#0ea5e9;box-shadow:0 0 0 2px #fff}
+.dam-node.dam-top.warn::before{background:#f59e0b}
+.dam-note{color:#9fb0c6}.dam-top.warn .dam-note{color:#fbbf24;font-weight:600}
+.dam-notice{display:block;margin-top:4px;padding:6px 8px;border-radius:9px;background:rgba(245,158,11,.14);color:#fcd34d;text-decoration:none;font-size:11.5px}
+.dam-km{color:#9fb0c6}.dam-level{font-feature-settings:'tnum'}
+.dam-node.alarm::before,.dam-node.rising::before{background:#f59e0b}.dam-node.flood::before{background:#ef4444}
+.dam-node.alarm .dam-level,.dam-node.rising .dam-level{color:#fbbf24}.dam-node.flood .dam-level{color:#f87171;font-weight:700}
+.dam-node.stale::before,.dam-node.none::before,.dam-node.wait::before{background:#64748b}.dam-node.none,.dam-node.wait,.dam-node.stale .dam-level{color:#9fb0c6}
+.dam-node.end::before{left:-19px;top:4px;width:10px;height:10px;background:#f97316}.dam-node.end{color:#fdba74;font-size:11.5px}
+.dam-card .dam-src{color:#7f93b0;font-size:10px;margin:10px 0 0;line-height:1.4}
+body.app-c .workspace{background:#0b1424}
+body.app-c .footerbar{background:#0b1424;color:#8fa3bd;border-top:1px solid #16243a}body.app-c .footerbar strong{color:#cfe0f5}
+.app-glass,body.app-c .app-brand,body.app-c .app-search,body.app-c .app-tabs,body.app-c .app-round,body.app-c .app-weather,body.app-c .app-palette,body.app-c .workspace .timeline,body.app-c .workspace:not([data-view=map]) .control-dock{background:var(--glass);-webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4);border:1px solid var(--glass-b);color:var(--g-text);box-shadow:var(--g-shadow)}
+.app-logo{width:30px;height:30px;border-radius:9px;background:#102e53;display:grid;place-items:center;color:#fff}.app-logo svg{width:26px;height:26px}
+.app-live{display:flex;align-items:center;gap:6px;font-size:.75rem;font-weight:700;color:#7ee2a8}.app-live i{width:7px;height:7px;border-radius:50%;background:#34d27b;box-shadow:0 0 0 4px rgba(52,210,123,.2)}
+body.app-c .app-search-icon{display:flex;padding:0 6px 0 14px;color:var(--g-muted)}
+body.app-c .app-search input{flex:1;min-width:0;height:100%;border:0;background:transparent;color:#fff;font:inherit;font-size:.9375rem;padding:0 14px 0 2px}
+body.app-c .app-search input::placeholder{color:var(--g-muted)}body.app-c .app-search input:focus{outline:none}body.app-c .app-search:focus-within{box-shadow:0 0 0 2px var(--g-accent),var(--g-shadow)}
+body.app-c .app-results li{display:flex;justify-content:space-between;gap:10px;padding:10px 12px;border-radius:10px;cursor:pointer}
+body.app-c .app-results li strong{color:#fff;font-weight:600}body.app-c .app-results li span{color:var(--g-muted);font-size:.8125rem;white-space:nowrap}
+body.app-c .app-results li[aria-selected=true],body.app-c .app-results li:hover{background:rgba(59,130,246,.2)}body.app-c .app-results li.empty{color:var(--g-muted)}
+body.app-c .app-weather-place strong{font-size:1.0625rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+body.app-c .app-weather-place small{font-size:.75rem;color:var(--g-muted)}body.app-c .app-weather-note{display:none}
+body.app-c .app-weather-rain,body.app-c .app-weather-stats>span{display:flex;flex-direction:column-reverse;justify-content:flex-end;gap:2px;padding:10px;border:0;border-radius:11px;background:var(--glass-2);align-items:flex-start}
+body.app-c .app-weather-rain b{color:#7fb4ff;font-size:1.0625rem}body.app-c .app-weather-rain small,body.app-c .app-weather-stats small{font-size:.6875rem;color:var(--g-muted)}
+body.app-c .app-weather-stats{display:contents}body.app-c .app-weather-stats b{font-size:1.0625rem}body.app-c .app-weather-stats i{font-style:normal;font-size:.6875rem;font-weight:600}
+body.app-c .workspace .maplibregl-ctrl-group{background:var(--glass);border:1px solid var(--glass-b);border-radius:14px;overflow:hidden;box-shadow:var(--g-shadow)}
+body.app-c .workspace .maplibregl-ctrl-group button{width:40px;height:40px}body.app-c .workspace .maplibregl-ctrl-group button+button{border-top:1px solid var(--glass-b)}
+body.app-c .workspace .maplibregl-ctrl-group .maplibregl-ctrl-icon{filter:invert(1)}
+body.app-c .workspace .maplibregl-ctrl-attrib{background:rgba(13,21,35,.7);color:#9fb0c6}body.app-c .workspace .maplibregl-ctrl-attrib a{color:#cfe0f5}
+body.app-c .timeline *{color:inherit}
+body.app-c .timeline-head #frameTime{color:#fff;font-weight:700}body.app-c .timeline .frame-label,body.app-c .timeline #timelineTitle,body.app-c .timeline-freshness,body.app-c .playback-status,body.app-c .forecast-point-status,body.app-c .forecast-model-label{color:var(--g-muted)!important}
+body.app-c .timeline-mode{background:rgba(255,255,255,.08);border:0;border-radius:11px}
+body.app-c .timeline-mode button{background:transparent;color:#b9c6d8;border-radius:9px}
+body.app-c .timeline-mode button[aria-pressed=true]{background:#fff;color:#0f1d30;box-shadow:none}
+body.app-c .timeline-controls button{background:var(--g-accent);color:#fff;border-radius:12px;box-shadow:0 6px 18px rgba(37,99,235,.45);border:0}
+body.app-c .timeline-controls input[type=range]{accent-color:var(--g-accent)}
+body.app-c .latest-button{background:rgba(59,130,246,.18);color:#bcd6ff;border:1px solid rgba(110,160,255,.35)}
+body.app-c .latest-button[aria-pressed=true]{background:rgba(59,130,246,.3);color:#fff}
+body.app-c .timeline select{background:rgba(255,255,255,.08) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%239fb0c6' stroke-width='1.6'/%3E%3C/svg%3E") no-repeat right 8px center;color:#fff;border:1px solid var(--glass-b);padding-right:22px;-webkit-appearance:none;appearance:none}body.app-c .timeline select option{color:#0f1d30}
+body.app-c .timeline-legend summary{color:#cfe0f5}body.app-c .timeline-legend .legend,body.app-c .timeline-legend p{color:var(--g-muted)}
+body.app-c .workspace[data-view=map] .control-dock{display:none}
+body.app-c .control-dock .dock-tabs{display:none}
+body.app-c .control-dock .left-panel,body.app-c .control-dock .right-panel{background:transparent;color:var(--g-text)}
+body.app-c .control-dock .panel{background:var(--glass-2);border:1px solid var(--glass-b);box-shadow:none;color:var(--g-text)}
+body.app-c .control-dock :is(h2,h3,strong,b,.metric-value,.layer-title,.day-temp,label,legend,summary,output){color:#fff}
+body.app-c .control-dock :is(p,.small,.description,.metric-note,.metric-label,.terrain-credit,.day-tag,.search-summary,.map-empty-note,.feed-check,span){color:var(--g-muted)}
+body.app-c .control-dock .layer-title,body.app-c .control-dock .metric-label span{color:#e9eef6}
+body.app-c .control-dock :is(select,input[type=text],input[type=search],textarea){background:rgba(255,255,255,.08);color:#fff;border:1px solid var(--glass-b)}
+/* iPhone Safari draws its own white dropdown unless appearance is off: white text on white (25 Oct 2026). */
+body.app-c .control-dock select:not([multiple]){background:rgba(255,255,255,.08) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%239fb0c6' stroke-width='1.6'/%3E%3C/svg%3E") no-repeat right 12px center;padding-right:32px;-webkit-appearance:none;appearance:none}
+body.app-c .control-dock select:disabled,body.app-c .timeline select:disabled{opacity:.5;color:#cbd5e1}
+body.app-c .playback-speed select{padding-right:18px;background-position:right 5px center}body.app-c .control-dock select option{color:#0f1d30}
+body.app-c .control-dock :is(.metric,.day,.gauge-summary,.feed-status,.selected-place,.risk-box,.feed-health>div,.radar-agencies a,.page-links a,.news-list li,.alert-list li,.terrain-summary>div,.source-card,.layer-tabs,.gps,#refreshBtn,.link-button,.pond-run,button[data-retry-feed],.selected-place a){background:rgba(255,255,255,.06);border-color:var(--glass-b);color:var(--g-text)}
+body.app-c .control-dock .day.today{background:rgba(59,130,246,.22);border-color:#3b82f6}
+body.app-c .control-dock .day.trend{background:transparent;border-style:dashed}body.app-c .control-dock .day.trend .day-tag{color:#e0b85a}
+body.app-c .control-dock .day-rain{color:#7fb4ff}body.app-c .control-dock a{color:#9cc3ff}
+body.app-c .control-dock .badge{background:rgba(255,255,255,.1);color:#cfe0f5;border:0}
+body.app-c .control-dock .layer-row{border-color:var(--glass-b)}
+body.app-c .control-dock .layer-tabs{box-shadow:0 6px 12px rgba(13,21,35,.9);background:#1a2538}
+body.app-c .control-dock .layer-tabs button{color:#b9c6d8;background:transparent}body.app-c .control-dock .layer-tabs button.active{background:#fff;color:#0f1d30}
+body.app-c .control-dock .admin-picker b,body.app-c .control-dock .picker-heading b{background:var(--g-accent);color:#fff}
+body.app-c .control-dock .offline{background:rgba(190,30,45,.25);color:#ffc9cc}
+body.app-c .control-dock .layer-symbol{background:rgba(255,255,255,.1);color:#cfe0f5}
+@media(max-width:760px){
+ /* Phone layout: design 3 (20 Oct 2026) — search row on top, weather card top-left, layer column
+    on the right, floating timeline, icon bar at the bottom. Same dark glass as the desktop. */
+ body.app-c{--nav-h:calc(64px + env(safe-area-inset-bottom));--gap:10px}
+ body.app-c .app-brand,body.app-c .app-tabs,body.app-c .app-sources,body.app-c .app-ai,body.app-c .app-palette,body.app-c .app-weather-bars,body.app-c .app-weather-axis,body.app-c .app-weather-foot{display:none!important}
+ body.app-c .topbar,body.app-c .prototype,body.app-c .map-hint,body.app-c .weather-panel-toggle,body.app-c .layers-panel-toggle{display:none!important}
+ body.app-c .workspace{height:calc(100dvh - var(--nav-h))!important}
+ body.app-c .timeline-mobile-details:not([hidden]){padding-bottom:calc(var(--nav-h) + 24px);background:#0d1523;color:#cfe0f5;border-color:#1d2b42}
+ /* Bottom icon bar */
+ body.app-c .mobile-nav{display:flex!important;position:fixed;left:0;right:0;bottom:0;z-index:20;height:var(--nav-h);min-height:0;padding:4px 4px env(safe-area-inset-bottom);gap:0;background:rgba(13,21,35,.92);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);border:0;border-top:1px solid var(--glass-b);box-shadow:0 -6px 20px rgba(0,0,0,.35)}
+ body.app-c .mobile-nav button{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-height:54px;padding:2px 0;background:transparent;border-radius:12px;color:#8ea0b8;font-size:.6875rem;font-weight:600;line-height:1.2;position:relative}
+ body.app-c .mobile-nav button svg{width:23px;height:23px}
+ body.app-c .mobile-nav button.active{color:#60a5fa;background:transparent}body.app-c .mobile-nav button.active svg{stroke-width:2.3}
+ body.app-c .mobile-nav button.active::before{content:'';position:absolute;top:-4px;left:30%;right:30%;height:3px;border-radius:0 0 3px 3px;background:#3b82f6}
+ body.app-c .mobile-nav [data-ai-open]{color:#a78bfa}
+ body.app-c .mobile-nav [data-view=news][data-count]:not([data-count=''])::after{content:attr(data-count);position:absolute;top:3px;left:calc(50% + 6px);min-width:17px;height:17px;padding:0 4px;border-radius:9px;background:#e0352b;color:#fff;font-size:.625rem;line-height:17px;font-weight:700;border:2px solid #0d1523}
+ /* Top row: search, feedback, alerts */
+ body.app-c .app-top{display:flex;align-items:center;gap:8px;position:absolute;top:calc(10px + env(safe-area-inset-top));left:var(--gap);right:var(--gap);z-index:9}
+ body.app-c .workspace:not([data-view=map]) .app-top{display:none}
+ body.app-c .app-search{flex:1;min-width:0;position:relative;display:flex;align-items:center;height:46px;border-radius:15px}
+ body.app-c .app-search input{font-size:16px}
+ body.app-c .app-search:focus-within{box-shadow:0 0 0 2px var(--g-accent),var(--g-shadow)}
+ body.app-c .app-results{position:absolute;top:52px;left:0;right:-108px;margin:0;padding:6px;list-style:none;background:#101b2d;border:1px solid var(--glass-b);border-radius:14px;box-shadow:var(--g-shadow);max-height:min(60dvh,420px);overflow:auto}
+ body.app-c .app-round{flex:none;width:46px;height:46px;border-radius:15px;display:grid;place-items:center;padding:0;color:#34d399}
+ body.app-c .app-top .alert-banner{position:static!important;flex:none;width:46px;min-width:46px;height:46px;min-height:46px;padding:0;border-radius:15px;background:var(--glass);border:1px solid var(--glass-b);color:#cfe0f5;box-shadow:var(--g-shadow);display:flex!important;flex-direction:column;align-items:center;justify-content:center;gap:0;font-size:.6875rem;line-height:1;max-width:none}
+ body.app-c .app-top .alert-banner b{font-size:17px}body.app-c .app-top .alert-banner span{display:none}
+ body.app-c .app-top .alert-banner.has-alerts{background:rgba(190,30,45,.9);border-color:rgba(255,120,120,.45);color:#fff}
+ body.app-c .app-top .alert-banner[data-count]:not([data-count=''])::after{content:attr(data-count);font-weight:700}
+ /* Weather card, top-left (map view) */
+ body.app-c .app-weather{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;position:absolute;left:var(--gap);top:calc(66px + env(safe-area-inset-top));width:min(252px,calc(100% - 88px));padding:12px 14px;border-radius:18px;text-align:left;font:inherit;z-index:6}
+ body.app-c .workspace:not([data-view=map]) .app-weather{display:none}
+ body.app-c .app-weather-place{grid-column:1/-1;display:flex;flex-direction:column;min-width:0}
+ body.app-c .app-weather-place strong{font-size:.9375rem}
+ body.app-c .app-weather-temp{grid-column:1/2;font-size:2.6rem;font-weight:300;line-height:1;letter-spacing:-1.5px;margin:4px 0 2px}
+ body.app-c .app-weather-hilo{grid-column:2/-1;align-self:end;padding-bottom:6px;font-size:.6875rem;color:var(--g-muted);display:block}
+ body.app-c .app-weather-rain,body.app-c .app-weather-stats>span{padding:6px 7px;border-radius:9px}
+ body.app-c .app-weather-rain b,body.app-c .app-weather-stats b{font-size:.875rem}
+ body.app-c .app-weather-rain small,body.app-c .app-weather-stats small{font-size:.5625rem}
+ body.app-c .app-weather-stats i{font-style:normal;font-size:.5625rem}
+ body.app-c .app-weather-place .app-weather-note{display:block;font-size:.5625rem;color:#7f93b0}
+ /* Layer column, right */
+ body.app-c .workspace>.quick-layers{position:absolute;top:calc(66px + env(safe-area-inset-top));right:var(--gap);left:auto;z-index:7;display:flex!important;flex-direction:column;gap:4px;padding:4px;width:auto;background:var(--glass);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);border:1px solid var(--glass-b);border-radius:16px;box-shadow:var(--g-shadow);transform:none}
+ body.app-c .workspace>.quick-layers button{width:44px;height:44px;min-height:44px;padding:0;border-radius:12px;background:transparent;color:#e9eef6;font-size:0;display:grid;place-items:center;box-shadow:none}
+ body.app-c .workspace>.quick-layers button i{display:block!important;font-style:normal;font-size:19px;line-height:1}
+ body.app-c .workspace>.quick-layers button[aria-pressed=true]{background:#2563eb;color:#fff}
+ body.app-c .workspace>.quick-layers .app-layers-more{display:grid!important;border-top:1px solid var(--glass-b);border-radius:0 0 12px 12px}
+ body.app-c .workspace>.quick-layers .app-layers-more svg{width:20px;height:20px}
+ body.app-c .workspace:not([data-view=map])>.quick-layers{display:none!important}
+ /* Floating timeline */
+ body.app-c .workspace .timeline{left:var(--gap)!important;right:var(--gap)!important;bottom:12px!important;width:auto!important;max-width:none!important;transform:none!important;margin:0!important;border-radius:18px;padding:10px 12px}
+ body.app-c .workspace .maplibregl-ctrl-bottom-right{bottom:calc(var(--timeline-height,110px) + 16px)}
+ /* Other tabs: full dark sheet (the bottom bar switches tabs) */
+ body.app-c .workspace:not([data-view=map]) .control-dock{top:0;bottom:0;left:0;right:0;width:100%;max-height:none;border:0;border-radius:0;box-shadow:none}
+ body.app-c .control-dock .left-panel,body.app-c .control-dock .right-panel{padding:12px 10px calc(16px + env(safe-area-inset-top))}
+ body.app-c .control-dock .panel{border-radius:14px;padding:14px}
+ body.app-c .control-dock .close-mobile{display:none}
+ /* Compact option A (20 Oct 2026): controls hug the screen edges, weather becomes a one-line chip
+    under the search box, layer column flush right, thinner timeline sitting on the bottom bar. */
+ body.app-c{--nav-h:calc(58px + env(safe-area-inset-bottom));--gap:6px}
+ body.app-c .mobile-nav button{min-height:50px}
+ body.app-c .app-top{top:calc(6px + env(safe-area-inset-top));gap:6px}
+ body.app-c .app-search{height:40px;border-radius:12px}
+ body.app-c .app-results{top:46px;right:-92px}
+ body.app-c .app-round,body.app-c .app-top .alert-banner{width:40px;min-width:40px;height:40px;min-height:40px;border-radius:12px}
+ body.app-c .app-weather{display:flex;align-items:center;gap:8px;top:calc(52px + env(safe-area-inset-top));width:auto;max-width:calc(100% - 64px);padding:5px 12px 5px 10px;border-radius:999px}
+ body.app-c .app-weather-place{flex-direction:row;align-items:center;gap:6px}
+ body.app-c .app-weather-place strong{font-size:.8125rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+ body.app-c .app-weather-place .app-weather-note,body.app-c .app-weather-place .app-weather-when,body.app-c .app-weather-hilo,body.app-c .app-weather-stats,body.app-c .app-weather-rain small{display:none!important}
+ body.app-c .app-weather-temp{font-size:15px;font-weight:700;letter-spacing:0;margin:0}
+ body.app-c .app-weather-rain{padding:0;background:none!important}
+ body.app-c .app-weather-rain b{font-size:.8125rem;color:#7fb4ff}body.app-c .app-weather-rain b::before{content:'';display:inline-block;width:1.05em;height:1.05em;margin-right:3px;vertical-align:-.17em;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 14.5h10a3.8 3.8 0 0 0 .4-7.6A5.6 5.6 0 0 0 6.6 6 4.3 4.3 0 0 0 7 14.5z'/%3E%3Cpath d='m9 17.5-1 2.5M13 17.5l-1 2.5M17 17.5l-1 2.5'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 14.5h10a3.8 3.8 0 0 0 .4-7.6A5.6 5.6 0 0 0 6.6 6 4.3 4.3 0 0 0 7 14.5z'/%3E%3Cpath d='m9 17.5-1 2.5M13 17.5l-1 2.5M17 17.5l-1 2.5'/%3E%3C/svg%3E") center/contain no-repeat;font-size:1em;}
+ body.app-c .app-weather::after{content:'›';color:var(--g-muted)}
+ body.app-c .workspace>.quick-layers{top:calc(58px + env(safe-area-inset-top));right:0;gap:2px;padding:3px;border-right:0;border-radius:12px 0 0 12px}
+ body.app-c .workspace>.quick-layers button{width:38px;height:38px;min-height:38px;border-radius:10px}
+ body.app-c .workspace>.quick-layers button i{font-size:17px}
+ body.app-c .workspace .timeline{left:0!important;right:0!important;bottom:0!important;border-radius:14px 14px 0 0;border-width:1px 0 0;padding:7px 8px 6px}
+ body.app-c .workspace[data-view=map] .app-note-m{display:block;position:absolute;left:12px;top:calc(92px + env(safe-area-inset-top));z-index:6;font-size:.5625rem;color:#dbe6f5;text-shadow:0 1px 3px #000,0 0 6px #000;pointer-events:none}
+ body.app-c .workspace .timeline-mode{display:none!important}
+ body.app-c .timeline-head .app-mode-select{display:block;margin-left:auto;flex:none;width:auto!important;min-width:0!important;max-width:132px;height:28px!important;min-height:0!important;padding:0 22px 0 9px!important;border-radius:9px;border:1px solid var(--glass-b);box-shadow:none;background:rgba(255,255,255,.08) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%239fb0c6' stroke-width='1.6'/%3E%3C/svg%3E") no-repeat right 8px center;color:#e9eef6;font:600 .6875rem/1 inherit;-webkit-appearance:none;appearance:none}
+ body.app-c .app-mode-select option{background:#101b2d;color:#e9eef6}
+}
+/* ---------------- Desktop: design 1 layout ---------------- */
+@media(min-width:761px){
+ body.app-c .topbar,body.app-c .prototype,body.app-c .map-hint,body.app-c .weather-panel-toggle,body.app-c .layers-panel-toggle{display:none!important}
+ /* Top row */
+ body.app-c .app-top{display:flex;align-items:center;gap:10px;position:absolute;top:var(--gap);left:var(--gap);right:var(--gap);z-index:9;pointer-events:none}
+ body.app-c .app-top>*{pointer-events:auto}
+ body.app-c .app-brand{display:flex;align-items:center;gap:10px;height:52px;padding:0 14px;border-radius:16px;white-space:nowrap}
+ .app-brand b{font-size:1rem}
+ body.app-c .app-search{width:340px;flex:none;height:52px;border-radius:16px;display:flex;align-items:center;position:relative}
+ body.app-c .app-results{position:absolute;top:58px;left:0;right:0;margin:0;padding:6px;list-style:none;background:#101b2d;border:1px solid var(--glass-b);border-radius:14px;box-shadow:var(--g-shadow);max-height:420px;overflow:auto}
+ body.app-c .app-tabs{display:flex;gap:2px;padding:4px;border-radius:16px;margin:0 auto}
+ body.app-c .app-tabs button{min-height:42px;padding:0 18px;border-radius:12px;background:transparent;color:#b9c6d8;font-weight:600;font-size:.875rem}
+ body.app-c .app-tabs button:hover{background:rgba(255,255,255,.07)}body.app-c .app-tabs button.active{background:#fff;color:#0f1d30}
+ body.app-c .app-round{width:52px;height:52px;flex:none;border-radius:16px;display:grid;place-items:center;padding:0;color:#e9eef6}
+ body.app-c .app-round:hover,body.app-c .app-brand:hover{background:rgba(25,36,56,.86)}
+ body.app-c .app-ai{display:flex;align-items:center;gap:8px;height:52px;padding:0 16px;border-radius:16px;background:#5b3fd6;border:1px solid #7a62ee;color:#fff;font-weight:700;box-shadow:var(--g-shadow);white-space:nowrap}
+ body.app-c .app-top .alert-banner{position:static!important;display:flex!important;align-items:center;gap:8px;height:52px;min-height:52px;max-width:none;padding:0 16px;border-radius:16px;background:var(--glass);border:1px solid var(--glass-b);color:var(--g-text);box-shadow:var(--g-shadow);font-weight:600;font-size:.8125rem;white-space:nowrap}
+ body.app-c .app-top .alert-banner.has-alerts{background:rgba(190,30,45,.88);border-color:rgba(255,120,120,.45);color:#fff}
+ body.app-c .app-top .alert-banner span{max-width:260px;overflow:hidden;text-overflow:ellipsis}
+ /* Weather card (left, map view) */
+ body.app-c .app-weather{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;position:absolute;left:var(--gap);top:88px;width:340px;padding:18px;border-radius:18px;text-align:left;font:inherit;z-index:6;cursor:pointer}
+ body.app-c .workspace:not([data-view=map]) .app-weather{display:none}
+ body.app-c .app-weather-place{grid-column:1/-1;display:flex;flex-direction:column;min-width:0}
+ body.app-c .app-weather-temp{grid-column:1/2;font-size:3.5rem;font-weight:300;line-height:1;letter-spacing:-2px;margin:6px 0 4px}
+ body.app-c .app-weather-hilo{grid-column:2/-1;align-self:center;font-size:.8125rem;color:var(--g-muted)}
+ body.app-c .app-weather-bars{grid-column:1/-1;display:flex;align-items:flex-end;gap:4px;height:44px;margin-top:8px}
+ body.app-c .app-weather-bars i{flex:1;background:#3d7bf5;border-radius:3px}body.app-c .app-weather-bars i.dry{background:rgba(255,255,255,.14)}
+ body.app-c .app-weather-axis{grid-column:1/-1;display:flex;justify-content:space-between;font-size:.625rem;color:var(--g-muted)}
+ body.app-c .app-weather-foot{grid-column:1/-1;font-size:.625rem;color:#7f93b0;margin-top:4px}
+ /* Layer palette (right) */
+ body.app-c .app-palette{display:block;position:absolute;right:var(--gap);top:88px;width:224px;padding:8px;border-radius:18px;z-index:6}
+ body.app-c .app-palette-head{font-size:.6875rem;font-weight:700;letter-spacing:.06em;color:var(--g-muted);padding:6px 12px 4px}
+ body.app-c .app-palette .quick-layers{position:static;display:flex!important;flex-direction:column;gap:2px;width:auto;margin:0;padding:0 0 6px;border:0;border-bottom:1px solid var(--glass-b);border-radius:0;background:transparent;box-shadow:none;transform:none}
+ body.app-c .app-palette .quick-layers button,body.app-c .app-palette-extra button{display:flex;align-items:center;gap:12px;width:100%;min-height:40px;padding:8px 12px;border-radius:11px;background:transparent;color:#d5deea;font-size:.875rem;font-weight:500;justify-content:flex-start;text-align:left}
+ body.app-c .app-palette .quick-layers button i{font-style:normal;font-size:17px;width:20px;text-align:center;display:inline-block!important}
+ body.app-c .app-palette .quick-layers button:hover,body.app-c .app-palette-extra button:hover{background:rgba(255,255,255,.06)}
+ body.app-c .app-palette .quick-layers button[aria-pressed=true]{background:rgba(66,133,255,.22);color:#fff;box-shadow:inset 0 0 0 1px rgba(110,160,255,.55)}
+ body.app-c .app-palette-extra{padding-top:6px}
+ body.app-c .app-palette-extra button svg{width:20px;height:20px;flex:none}
+ body.app-c .app-palette-extra button small{margin-left:auto;font-size:.6875rem;color:#8ea0b8}
+ body.app-c .app-palette-extra button::after{content:'';margin-left:auto;width:28px;height:16px;border-radius:8px;background:rgba(255,255,255,.16);box-shadow:inset -12px 0 0 2px rgba(13,21,35,.9)}
+ body.app-c .app-palette-extra button small+*::after,body.app-c .app-palette-extra button small{margin-left:auto}
+ body.app-c .app-palette-extra button:has(small)::after{margin-left:8px}
+ body.app-c .app-palette-extra button[aria-pressed=true]::after{background:var(--g-accent);box-shadow:inset 12px 0 0 2px #fff}
+ body.app-c .app-palette-extra .app-palette-more{min-height:34px;color:#7fb4ff;font-size:.8125rem;font-weight:600}
+ body.app-c .app-palette-extra .app-palette-more::after{display:none}
+ body.app-c .workspace .maplibregl-ctrl-top-right{top:auto;bottom:calc(var(--timeline-height,96px) + 40px);right:var(--gap)}
+ /* Timeline (bottom, full width) */
+ body.app-c .workspace .timeline{left:var(--gap)!important;right:var(--gap)!important;width:auto!important;max-width:none!important;transform:none!important;margin:0!important;bottom:calc(var(--attribution-height,20px) + 14px);border-radius:18px;padding:14px 20px}
+ /* Dock (weather / layers / news) as a dark glass sheet on the left */
+ body.app-c .control-dock{top:88px;left:var(--gap);border-radius:18px}
+ /* With a sheet open, the sheet takes the full left column and the timeline moves right of it. */
+ body.app-c .workspace:not([data-view=map]) .control-dock{bottom:calc(var(--attribution-height,20px) + 14px);max-height:none}
+ body.app-c .workspace:not([data-view=map]) .timeline{left:calc(var(--dock-width) + var(--gap) * 2)!important}
+}
+/* Storm banner (links to /storm), shown only while JMA lists an active tropical cyclone. */
+.app-storm[hidden]{display:none!important}
+body.app-c .workspace[data-view=map] .app-storm{position:absolute;z-index:8;display:block;max-width:calc(100% - 70px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font:800 13px/1 'Noto Sans Lao',Inter,sans-serif;color:#111;background:#facc15;border-radius:999px;padding:8px 14px;text-decoration:none;box-shadow:0 6px 18px rgba(0,0,0,.4);left:6px;top:calc(108px + env(safe-area-inset-top))}
+body.app-c .app-storm[data-level=near]{background:#dc2626;color:#fff}body.app-c .app-storm[data-level=watch]{background:#f97316;color:#fff}
+body.app-c .workspace:not([data-view=map]) .app-storm{display:none}
+@media(min-width:761px){body.app-c .workspace[data-view=map] .app-storm{left:50%;transform:translateX(-50%);top:84px;max-width:min(560px,calc(100% - 520px))}}
+/* Storm mode report card and storm alerts. */
+.sm-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px 10px}
+.sm-row{display:flex;flex-direction:column;gap:1px;background:rgba(255,255,255,.05);border-radius:8px;padding:6px 8px}.sm-row span{font-size:10.5px;color:#9fb0c6}.sm-row b{font-size:13px;color:#fff;white-space:normal;overflow:visible}
+.sm-arrow{display:inline-block;font-style:normal;font-weight:900;color:#facc15}
+.sm-tw.towards{color:#f87171}.sm-tw.away{color:#4ade80}.sm-tw.side{color:#facc15}
+.sm-table{width:100%;border-collapse:collapse;margin-top:8px;font-size:12px}.sm-table th{font-size:10.5px;color:#9fb0c6;text-align:left;font-weight:600;padding:3px 4px}.sm-table td{padding:5px 4px;border-top:1px solid rgba(255,255,255,.08);font-family:Inter,'Noto Sans Lao',sans-serif;font-weight:700}.sm-table td small{display:block;font-weight:500;font-size:10px;color:#9fb0c6}
+.sm-src{font-size:10px;color:#9fb0c6;margin-top:8px;line-height:1.4}
+.alert-item.storm{border-left:4px solid #f97316}.alert-item.storm.far{border-left-color:#facc15}
+.alert-storm-go{margin-top:6px;border:0;border-radius:999px;background:#facc15;color:#111;font:800 12px/1 'Noto Sans Lao',Inter,sans-serif;padding:7px 12px;cursor:pointer;align-self:flex-start}
+/* Desktop: a long alert title (e.g. a storm) must not push the top bar off screen. */
+@media(min-width:761px){body.app-c .app-top .alert-banner{max-width:200px;min-width:0;overflow:hidden}body.app-c .app-top .alert-banner span{display:block;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}}
+/* Storm tracking mode (storm-layer.js), layout chosen 22 Oct 2026: the map is cleared of the top
+   menus, panels and layer buttons; a storm strip (wind, heading, speed, distance, exit, report) is
+   attached on top of the time bar, same width; the time bar itself is made slimmer. */
+.app-storm-mode[hidden]{display:none!important}
+.app-storm-mode{position:absolute;left:-1px;right:-1px;bottom:100%;z-index:2;background:rgba(13,21,35,.92);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);color:#e9eef6;border:1px solid rgba(255,255,255,.1);border-bottom:1px solid rgba(255,255,255,.08);border-top:3px solid #f97316;border-radius:14px 14px 0 0;padding:6px 8px;font-family:'Noto Sans Lao',Inter,sans-serif;box-shadow:0 -6px 16px rgba(0,0,0,.35)}
+.app-storm-mode .sm-head{display:flex;align-items:center;gap:8px}
+.app-storm-mode .sm-exit{flex:none;border:1px solid rgba(255,255,255,.12);border-radius:9px;background:rgba(255,255,255,.08);color:#e9eef6;font:800 12.5px/1 'Noto Sans Lao',Inter,sans-serif;padding:8px 10px;cursor:pointer}
+.app-storm-mode .sm-text{flex:1;min-width:0}
+.app-storm-mode .sm-text b{display:block;font-size:13.5px;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.app-storm-mode .sm-text small{display:block;font-size:11px;line-height:1.3;font-weight:600;color:#cbd5e1}
+.app-storm-mode .sm-more{flex:none;border:0;background:#2563eb;border-radius:9px;font:800 12px/1 'Noto Sans Lao',Inter,sans-serif;padding:8px 10px;color:#fff;cursor:pointer}
+.app-storm-mode .sm-details[hidden]{display:none}
+.app-storm-mode .sm-details{position:absolute;left:0;right:0;bottom:100%;margin-bottom:6px;background:rgba(13,21,35,.97);color:#e9eef6;border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:10px;max-height:min(52vh,460px);overflow:auto;box-shadow:0 10px 26px rgba(0,0,0,.45)}
+body.storm-mode .workspace .timeline{border-top-left-radius:0!important;border-top-right-radius:0!important;overflow:visible!important}
+/* Clean map: no top menus, cards, palettes or layer buttons while tracking a storm. */
+body.storm-mode .app-top,body.storm-mode .app-weather,body.storm-mode .app-note-m,body.storm-mode .app-palette,body.storm-mode .workspace>.quick-layers,body.storm-mode .topbar,body.storm-mode .alert-banner,body.storm-mode .control-dock{display:none!important}
+/* Slimmer time bar: only the essential row. */
+body.storm-mode .workspace .timeline .timeline-freshness,body.storm-mode .workspace .timeline .playback-status,body.storm-mode .workspace .timeline .forecast-point-status,body.storm-mode .workspace .timeline .timeline-legend,body.storm-mode .workspace .timeline .timeline-mode,body.storm-mode .workspace .timeline .app-mode-select{display:none!important}
+body.storm-mode .workspace .timeline{padding-top:6px!important;padding-bottom:6px!important}
+@media(min-width:761px){body.storm-mode .workspace .timeline{row-gap:2px!important}}.sm-share{margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,.1)}.sm-share>b{display:block;font-size:12.5px;margin-bottom:8px}.sm-share .share-row{display:flex;flex-wrap:wrap;align-items:center;gap:10px}.sm-share .share-btn{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;color:#fff;border:0;cursor:pointer;text-decoration:none;padding:0}.sm-share .share-note{flex-basis:100%;font-size:12px;color:#7ee2a8;min-height:1em}
+
+/* Station popup, option C (25 Oct 2026): water tube with alarm / flood lines + plain-Lao chips. */
+.gpop{width:auto;font-family:'Noto Sans Lao','Leelawadee UI',sans-serif;line-height:1.45;max-height:calc(100dvh - 250px);overflow-y:auto;-webkit-overflow-scrolling:touch}
+.gpop-head{display:flex;align-items:flex-start;justify-content:space-between;gap:6px;padding-right:14px}.gpop-head .gpop-chip{flex:none;margin-top:1px}
+.gpop-title{display:block;font-size:15px;font-weight:800}
+.gpop-sub{color:#64748b;font-size:12px;margin-top:1px}
+.gpop-tube{display:flex;gap:10px;margin-top:8px}
+.gpop-tb{position:relative;flex:none;width:30px;height:96px;border:2px solid #cbd5e1;border-radius:18px;overflow:hidden;background:#f8fafc}
+.gpop-water{position:absolute;left:0;right:0;bottom:0;background:linear-gradient(#60a5fa,#2563eb)}
+.gpop-line{position:absolute;left:0;right:0;z-index:1;border-top:2px dashed}.gpop-line.alarm{border-color:#f59e0b}.gpop-line.flood{border-color:#dc2626}
+.gpop-marks{position:relative;flex:1;height:96px;font-size:11.5px}
+.gpop-marks div{position:absolute;left:0;transform:translateY(50%);white-space:nowrap}
+.gpop-marks .flood{color:#dc2626;font-weight:800}.gpop-marks .alarm{color:#b45309;font-weight:800}.gpop-marks .now{color:#1d4ed8;font-weight:900;font-size:13.5px;z-index:2;background:rgba(255,255,255,.85);border-radius:4px;padding:0 2px}.gpop-marks .zero{color:#94a3b8}
+.gpop-note{margin-top:6px;font-size:12.5px;color:#334155}.gpop-note.warn{color:#b45309;font-weight:700}
+.gpop-chips{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}
+.gpop-chip{background:#f1f5f9;border-radius:8px;padding:2px 8px;font-size:12px;font-weight:700;color:#0f1d30}
+.gpop-chip.state-ok{background:#dcfce7;color:#166534}.gpop-chip.state-warn{background:#fef3c7;color:#92400e}.gpop-chip.state-alarm{background:#ffedd5;color:#9a3412}.gpop-chip.state-flood{background:#fee2e2;color:#991b1b}
+.gpop-help{margin-top:8px;color:#64748b;font-size:11px;line-height:1.4}
+.gpop .hist-open{display:block;width:100%;margin-top:8px;background:#eef4ff;color:#1d4ed8;font-weight:800;border:0;border-radius:9px;padding:8px;font-size:13px}
+.gpop-note .gpop-src{color:#94a3b8;font-size:11px}
+
+/* Line icons (ui-icons.js), 26 Oct 2026: same style everywhere, no colour emoji on iPhone. */
+.ui-icon{flex:none;vertical-align:-.15em}
+.gauge-pop .maplibregl-popup-content{width:264px;max-width:calc(100vw - 24px)}
+.gpop-chip{display:inline-flex;align-items:center;gap:4px}
+.gpop-marks div{display:flex;align-items:center;gap:3px}.gpop-dash{display:inline-block;width:10px;border-top:2px solid currentColor}
+.gpop-help .ui-icon{margin-right:3px;color:#64748b}
+.gpop .hist-open{display:flex;align-items:center;justify-content:center;gap:6px}
+/* Storm: line icon instead of the colour emoji (26 Oct 2026). */
+body.app-c .alert-item.storm>strong::before,body.app-c .alert-storm-go::before,.app-storm-mode .sm-text b::before{content:'';display:inline-block;width:1.1em;height:1.1em;margin-right:5px;vertical-align:-.2em;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2024%2024'%20fill%3D'none'%20stroke%3D'black'%20stroke-width%3D'1.9'%20stroke-linecap%3D'round'%3E%3Ccircle%20cx%3D'12'%20cy%3D'12'%20r%3D'2.6'%2F%3E%3Cpath%20d%3D'M4.5%209.5A8%208%200%200%201%2018%206M19.5%2014.5A8%208%200%200%201%206%2018M12%204.5c-3%200-5%201.5-6%203.5M12%2019.5c3%200%205-1.5%206-3.5'%2F%3E%3C%2Fsvg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2024%2024'%20fill%3D'none'%20stroke%3D'black'%20stroke-width%3D'1.9'%20stroke-linecap%3D'round'%3E%3Ccircle%20cx%3D'12'%20cy%3D'12'%20r%3D'2.6'%2F%3E%3Cpath%20d%3D'M4.5%209.5A8%208%200%200%201%2018%206M19.5%2014.5A8%208%200%200%201%206%2018M12%204.5c-3%200-5%201.5-6%203.5M12%2019.5c3%200%205-1.5%206-3.5'%2F%3E%3C%2Fsvg%3E") center/contain no-repeat}
+
+
+/* Phones: the map's ⓘ (attribution) sat on top of open menus; it shows again on the map view. */
+@media (max-width:760px){body.app-c .workspace:not([data-view=map]) .maplibregl-ctrl-bottom-right{display:none}}
+
+
+/* Tube labels line up with the lines inside the tube (26 Oct 2026): same height as the tube's inside. */
+.gpop-marks{height:92px;margin-top:2px}.gpop-dash{width:10px;margin-right:1px}.gpop-dash.alarm{border-color:#f59e0b}.gpop-dash.flood{border-color:#dc2626}.gpop-marks .lines{color:#b45309;font-weight:800}
+
+/* El Niño / La Niña chip (29 Oct 2026, owner's option 1): same pill shape and height as the weather
+   chip, orange (blue for La Niña); placed by app-shell.js next to or under the weather chip. */
+.app-enso{display:none}
+body.app-c .app-enso{display:inline-flex;align-items:center;gap:6px;position:absolute;z-index:6;height:34px;padding:0 12px 0 10px;border-radius:999px;background:rgba(194,65,12,.9);border:1px solid rgba(253,186,116,.55);color:#fff;font-size:.8125rem;font-weight:700;white-space:nowrap;text-decoration:none;box-shadow:var(--g-shadow);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px)}
+body.app-c .app-enso.cold{background:rgba(29,78,216,.9);border-color:rgba(147,197,253,.55)}
+body.app-c .app-enso::before{content:'';width:1.1em;height:1.1em;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 9c2 0 2-2 4.5-2S10 9 12 9s2.5-2 4.5-2S19 9 21 9M3 15c2 0 2-2 4.5-2s2.5 2 4.5 2 2.5-2 4.5-2 2.5 2 4.5 2'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 9c2 0 2-2 4.5-2S10 9 12 9s2.5-2 4.5-2S19 9 21 9M3 15c2 0 2-2 4.5-2s2.5 2 4.5 2 2.5-2 4.5-2 2.5 2 4.5 2'/%3E%3C/svg%3E") center/contain no-repeat}
+body.app-c .app-enso::after{content:'›';font-weight:400;opacity:.85}
+body.app-c .app-enso[hidden],body.app-c .workspace:not([data-view=map]) .app-enso,body.storm-mode .app-enso{display:none!important}
+/* GPS button (owner's option A, 29 Oct 2026): phones only, same glass as the layer column, just under it (top set by app-shell.js). */
+.app-gps,.app-gps-search{display:none}
+@media(min-width:761px){body.app-c .app-gps-search{display:grid;place-items:center;flex:none;width:38px;height:38px;margin-right:7px;padding:0;border:0;border-radius:11px;background:transparent;color:var(--g-muted);cursor:pointer}
+ body.app-c .app-gps-search:hover{background:rgba(255,255,255,.08);color:#fff}body.app-c .app-gps-search svg{width:20px;height:20px}
+ body.app-c .app-gps-search[aria-busy=true]{color:#60a5fa}body.app-c .app-gps-search[aria-busy=true] svg{animation:gps-pulse 1s ease-in-out infinite}}
+@media(max-width:760px){body.app-c .app-gps{display:grid;place-items:center;position:absolute;right:0;top:calc(232px + env(safe-area-inset-top));z-index:7;width:45px;height:42px;padding:0;border:1px solid var(--glass-b);border-right:0;border-radius:12px 0 0 12px;background:var(--glass);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);box-shadow:var(--g-shadow);color:#e9eef6}
+ body.app-c .app-gps svg{width:20px;height:20px}
+ body.app-c .app-gps[aria-busy=true]{color:#60a5fa}body.app-c .app-gps[aria-busy=true] svg{animation:gps-pulse 1s ease-in-out infinite}}
+@keyframes gps-pulse{50%{opacity:.35}}
+body.app-c .workspace:not([data-view=map]) .app-gps,body.storm-mode .app-gps{display:none!important}
+/* Long help messages (GPS, 29 Oct 2026): use the screen width, not half of it. */
+body.app-c .toast{width:max-content;max-width:min(440px,calc(100% - 30px));line-height:1.6}
+/* "ວິທີເປີດ GPS" window (29 Oct 2026): steps drawn as the phone's own settings rows; the last row (blue) is what to pick. */
+.gps-help{width:min(480px,calc(100% - 16px))}
+.gps-why{margin:0 0 10px;padding:10px 12px;border-radius:10px;background:#fef3c7;color:#78350f;font-weight:600;line-height:1.6}
+.gps-help .small{margin:0 0 12px;color:#475569;line-height:1.7}
+.gps-help details{margin:0 0 10px;border:1px solid #dfe6ef;border-radius:12px;background:#fff}
+.gps-help summary{padding:12px 14px;font-weight:600;color:#203c60;cursor:pointer}
+.gps-help ol{margin:0;padding:0 14px 4px 32px;line-height:1.7;color:#1e293b}
+.gps-help li{margin:0 0 12px}
+.gps-help li .small{margin:4px 0 0;font-size:.8125rem}
+.gps-path{display:flex;flex-wrap:wrap;align-items:center;gap:6px 0;margin-top:6px}
+.gps-path span,.gps-path b{padding:3px 9px;border-radius:8px;font-size:.8125rem;line-height:1.5;white-space:nowrap}
+.gps-path span{border:1px solid #e2e8f0;background:#f1f5f9;color:#0f172a}
+.gps-path b{background:#2563eb;color:#fff;font-weight:600}
+.gps-path i{margin:0 5px;font-style:normal;color:#94a3b8}
+.gps-retry{width:100%;min-height:44px;margin:4px 0 10px;border:0;border-radius:10px;background:#2563eb;color:#fff;font:inherit;font-weight:600}

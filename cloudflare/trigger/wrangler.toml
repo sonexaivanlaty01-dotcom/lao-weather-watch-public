@@ -1,0 +1,13 @@
+# Free plan is enough: one tiny request every ten minutes.
+# Secret: npx wrangler secret put GITHUB_TOKEN  (fine-grained token, this repo only, Actions: read and write)
+name = "lao-himawari-trigger"
+main = "index.mjs"
+compatibility_date = "2026-09-01"
+
+[triggers]
+crons = ["2,12,22,32,42,52 * * * *"]
+
+[vars]
+REPO = "OWNER/REPOSITORY"
+WORKFLOW = "himawari.yml"
+REF = "main"

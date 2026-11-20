@@ -1,0 +1,68 @@
+# Lao Weather & Disaster Watch — Cloudflare Workers deployment (independent of Sites).
+# Public, non-profit community site. Not an official warning system.
+name = "lao-weather-watch"
+main = "worker.mjs"
+compatibility_date = "2026-09-01"
+
+[assets]
+directory = "./public"
+binding = "ASSETS"
+# Static files are served by Cloudflare directly (free, not counted as Worker requests);
+# only the data routes run the Worker. A private (Access) site must instead protect the
+# whole hostname with a Cloudflare Access application.
+run_worker_first = ["/api/*", "/weather", "/weather/*", "/storm/*"]
+
+# Shared GFS forecast for all data centres (see worker.mjs forecastStore), created
+# 10 October 2026 with: npx wrangler kv namespace create FORECAST_KV
+[[kv_namespaces]]
+binding = "FORECAST_KV"
+id = "<your-kv-namespace-id>"
+
+# Visitor feedback (anonymous), created 16 October 2026. Schema: feedback-schema.sql.
+# Admin page /admin.html needs the secret: npx wrangler secret put ADMIN_KEY
+[[d1_databases]]
+binding = "FEEDBACK_DB"
+database_name = "lao-weather-feedback"
+database_id = "<your-d1-database-id>"
+
+# Browser Run (free: 10 min/day) renders the storm link-preview card (worker/storm-share.mjs).
+[browser]
+binding = "BROWSER"
+
+# Per-IP request limits (26 Oct 2026, cloudflare-site/worker.mjs rateLimited). Period must be 10 or 60 s.
+# namespace_id: any integer unique in this account.
+[[ratelimits]]
+name = "WRITE_LIMIT"
+namespace_id = "2601"
+  [ratelimits.simple]
+  limit = 60
+  period = 60
+
+[[ratelimits]]
+name = "ADMIN_LIMIT"
+namespace_id = "2602"
+  [ratelimits.simple]
+  limit = 30
+  period = 60
+
+# Phone alerts (28 Oct 2026, worker/push.mjs). The Worker calls itself so each batch of sends runs in
+# a fresh invocation (Workers Free: 50 outside requests per invocation). Free, no extra request fee.
+# Needs the secret VAPID_PRIVATE_JWK (made once; see DATA_ACCESS.md). Without it alerts stay off.
+[[services]]
+binding = "SELF"
+service = "lao-weather-watch"
+
+[triggers]
+# */30: checks Open-Meteo's GFS metadata; downloads the 529-point grid only after a new model run.
+# 10,40 and 20,50: save MRC rain gauges / river levels to the station history (worker/history.mjs).
+crons = ["*/30 * * * *", "10,40 * * * *", "20,50 * * * *"]
+
+[vars]
+# "true": open to everyone (community site). "false": Cloudflare Access rules below apply.
+PUBLIC_SITE = "true"
+ACCESS_REQUIRED = "true"
+# Only for a private site, after creating the Access application (Zero Trust > Access > Applications):
+ACCESS_TEAM_DOMAIN = ""
+ACCESS_AUD = ""
+# Gemini stays off until a key is added with: npx wrangler secret put GEMINI_API_KEY
+GEMINI_FREE_TIER_ONLY = "true"

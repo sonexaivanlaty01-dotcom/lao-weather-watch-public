@@ -1,0 +1,24 @@
+{
+ "kind": "dam_release_notices",
+ "about": "Release notices recorded by hand from official or news sources. Add one entry per notice; the page shows notices whose period has not ended. Never add a notice without a source link.",
+ "notices": [
+  {
+   "dam": "Xe Lanong 1",
+   "province": "ສະຫວັນນະເຂດ",
+   "announced": "2026-08-08",
+   "from": "2026-08-11",
+   "until": "2026-08-14",
+   "summary": "ບໍລິສັດເຂື່ອນແຈ້ງລະບາຍນ້ຳ · ແຂວງສັ່ງ 9 ເມືອງທ້າຍນ້ຳ ເຕືອນປະຊາຊົນແຄມນ້ຳ ແລະ ບ່ອນລຸ່ມ",
+   "source": "https://thestar.com.my/aseanplus/aseanplus-news/2026/08/10/flood-risks-rise-across-laos-as-govt-aims-to-release-water-from-main-hydropower-dam"
+  },
+  {
+   "dam": "Nam Theun 2",
+   "province": "ຄຳມ່ວນ",
+   "announced": "2026-08-25",
+   "from": "2026-08-26",
+   "until": null,
+   "summary": "NTPC ກຽມລະບາຍນ້ຳຜ່ານປະຕູນ້ຳລົ້ນເຂື່ອນນາກາຍ ເພີ່ມເປັນຂັ້ນໆ · ຫຼີກລ້ຽງແຄມນ້ຳເທີນ",
+   "source": "https://www.namtheun2.com/?p=9542"
+  }
+ ]
+}

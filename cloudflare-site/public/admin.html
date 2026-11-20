@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>ผู้ใช้และความคิดเห็น · ลาวปลอดภัย</title>
+<style>
+:root{--ink:#18304d;--muted:#5b6f86;--line:#dce6f1;--navy:#102e53;--green:#0f7a4f}
+*{box-sizing:border-box}body{margin:0;font:15px/1.6 'Leelawadee UI','Noto Sans Lao','Noto Sans Thai',system-ui,sans-serif;color:var(--ink);background:#f3f6fa}
+header{background:var(--navy);color:#fff;padding:14px 16px}header h1{margin:0;font-size:1.15rem}header p{margin:2px 0 0;color:#cfe0f5;font-size:.85rem}
+main{max-width:1100px;margin:0 auto;padding:16px}
+.card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:12px}
+.login{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.login input{flex:1;min-width:200px;min-height:44px;border:1px solid #c9d6e3;border-radius:8px;padding:0 10px;font:inherit}
+button{min-height:44px;padding:0 16px;border:0;border-radius:8px;background:var(--green);color:#fff;font:inherit;font-weight:600;cursor:pointer}button.secondary{background:#e9eef5;color:var(--ink)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}.stat b{display:block;font-size:1.5rem}.stat span{color:var(--muted);font-size:.85rem}
+.tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.tools select{min-height:44px;border:1px solid #c9d6e3;border-radius:8px;padding:0 8px;font:inherit}
+.entry{border-top:1px solid var(--line);padding:10px 0}.entry:first-child{border-top:0}
+.meta{color:var(--muted);font-size:.8rem;display:flex;gap:10px;flex-wrap:wrap}.tag{background:#eaf1ff;color:#245de5;border-radius:12px;padding:0 8px}.stars{color:#f5b301;letter-spacing:1px}
+.msg{white-space:pre-wrap;overflow-wrap:anywhere;margin-top:4px;font-family:'Noto Sans Lao','Leelawadee UI',sans-serif}
+.error{color:#b42318}.empty{color:var(--muted)}
+h2{margin:0 0 10px;font-size:1rem}.live b{color:var(--green)}.live .dot{display:inline-block;width:10px;height:10px;border-radius:50%;background:#12b76a;margin-right:6px;animation:pulse 2s infinite}
+@keyframes pulse{50%{opacity:.35}}
+.bars{display:flex;align-items:flex-end;gap:3px;height:110px;margin-top:8px}.bars div{flex:1;background:#9cc3f5;border-radius:3px 3px 0 0;min-height:2px;position:relative}.bars div.today{background:var(--green)}
+.axis{display:flex;justify-content:space-between;color:var(--muted);font-size:.75rem}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}.chips span{background:#eef3f9;border-radius:12px;padding:0 10px;font-size:.85rem}
+.fbpost{display:grid;grid-template-columns:minmax(0,280px) minmax(0,1fr);gap:14px;border-top:1px solid var(--line);padding:14px 0}.fbpost:first-child{border-top:0}
+.fbpost img{width:100%;border-radius:10px;background:#0d1523;aspect-ratio:1;object-fit:cover}.fbpost .noimg{aspect-ratio:auto;padding:10px;background:#eef3f9;border-radius:10px;color:var(--muted);font-size:.85rem}
+.fbpost textarea{width:100%;min-height:260px;border:1px solid #c9d6e3;border-radius:8px;padding:8px;font:14px/1.55 'Noto Sans Lao','Leelawadee UI',sans-serif;resize:vertical}
+.st{border-radius:12px;padding:0 8px;font-weight:600}.st-draft{background:#fff4d6;color:#8a5a00}.st-approved{background:#e0f2fe;color:#075985}.st-posted{background:#dcfce7;color:#166534}.st-failed{background:#fee4e2;color:#b42318}.st-skipped,.st-expired{background:#eef3f9;color:var(--muted)}
+@media(max-width:640px){.fbpost{grid-template-columns:1fr}}
+.dev{display:flex;gap:12px;align-items:flex-start;border-top:1px solid var(--line);padding:10px 0;cursor:pointer}.dev:first-child{border-top:0}.dev input{width:22px;height:22px;margin:3px 0 0;flex:none;accent-color:var(--green)}.dev>div{min-width:0}
+.push-st{display:inline-block;margin-top:4px;font-size:.85rem}.push-st[hidden]{display:none}button.danger{background:#b42318}button:disabled{opacity:.55;cursor:wait}
+</style>
+</head>
+<body>
+<header><h1>ผู้ใช้และความคิดเห็น · ลาวปลอดภัย</h1><p>สำหรับเจ้าของเว็บเท่านั้น · ข้อความเป็นภาษาที่ผู้ใช้เขียนมา (ส่วนใหญ่ภาษาลาว)</p></header>
+<main>
+<section class="card"><form class="login" id="login"><label for="key" style="font-weight:600">รหัสแอดมิน</label><input id="key" type="password" autocomplete="current-password" required><button>เปิดดู</button><button type="button" class="secondary" id="logout" hidden>ออกจากระบบ</button></form><p class="error" id="error" role="alert"></p></section>
+<section id="data" hidden>
+<div class="card" id="visits"><h2>ผู้ใช้งาน</h2><p class="empty">กำลังโหลด…</p></div>
+<h2 style="margin:18px 0 8px">ทดสอบแจ้งเตือนในมือถือ</h2>
+<div class="card" id="pushTest"><p class="meta">ส่งทันที ไม่ต้องรอรอบ · ส่งเฉพาะเครื่องที่ติ๊ก (ไม่เกิน 10 เครื่อง) · ข้อความขึ้นต้นด้วย "🧪 ທົດສອບ" · ไม่ขึ้นในรายการแจ้งเตือนบนหน้าเว็บ</p>
+<div id="pushDevices"><p class="empty">กำลังโหลด…</p></div>
+<div class="tools" style="margin-top:8px"><button type="button" data-push="daily">🌦 ส่งอากาศวันนี้</button><button type="button" class="danger" data-push="emergency">🚨 ส่งทดสอบฉุกเฉิน</button><button type="button" class="secondary" id="pushReload">โหลดใหม่</button></div>
+<p class="meta" id="pushMsg" role="status"></p></div>
+<h2 style="margin:18px 0 8px">โพสต์ Facebook (บอท)</h2>
+<div class="card"><p class="meta" id="fbStatus">กำลังโหลด…</p><p class="meta">บอทเขียนร่างเอง 05:00 (โพสต์ 06:00) และ 17:00 (โพสต์ 18:00) เวลาลาว · ทุกวันอาทิตย์มีสรุป 7 วัน · คำเตือนพายุ / ร้อนจัด / ฝนหนัก / น้ำขึ้น ขึ้นเองเมื่อเกิด · <b>ข่าวประจำวันและสรุป 7 วันโพสต์เองอัตโนมัติ</b> (รวมเอลนีโญ: สรุปเดือนละครั้ง + ประกาศด่วนเมื่อ NOAA เปลี่ยนสถานะ หรือความแรงรายสัปดาห์เปลี่ยนระดับ) (ถ้าไม่อยากให้โพสต์ กด "ข้าม" ก่อนถึงเวลา) · <b>คำเตือนยังต้องกด "อนุมัติ" ก่อน</b> · ร่างที่ไม่ได้อนุมัติภายใน 18 ชม. หมดอายุ</p>
+<div class="tools" style="margin-top:8px"><span class="meta">สร้างร่างตอนนี้ (ดูตัวอย่าง):</span><button type="button" class="secondary" data-make="morning">วันนี้</button><button type="button" class="secondary" data-make="evening">พรุ่งนี้</button><button type="button" class="secondary" data-make="weekly">7 วัน</button><button type="button" class="secondary" data-make="enso">เอลนีโญ</button><button type="button" class="secondary" id="fbReload">โหลดใหม่</button></div><p class="error" id="fbError" role="alert"></p></div>
+<div class="card" id="fbList"><p class="empty">กำลังโหลด…</p></div>
+<h2 style="margin:18px 0 8px">ความคิดเห็น</h2>
+<div class="card stats" id="stats"></div>
+<div class="card"><div class="tools"><label for="topic">เรื่อง</label><select id="topic"><option value="">ทั้งหมด</option><option value="problem">มีปัญหา / ใช้ไม่ได้</option><option value="request">อยากให้เพิ่ม</option><option value="data">ข้อมูลไม่ถูก</option><option value="other">อื่นๆ</option><option value="none">ไม่ระบุ</option></select><button type="button" class="secondary" id="reload">โหลดใหม่</button><button type="button" class="secondary" id="csv">ดาวน์โหลด CSV</button></div></div>
+<div class="card" id="list"></div>
+</section>
+</main>
+<script>
+const TOPIC={problem:'มีปัญหา / ใช้ไม่ได้',request:'อยากให้เพิ่ม',data:'ข้อมูลไม่ถูก',other:'อื่นๆ',none:'ไม่ระบุ'};
+const VIEW={map:'แผนที่',weather:'อากาศ',layers:'ชั้นข้อมูล',news:'ข่าว'};
+const $=id=>document.getElementById(id);let data=null;
+const store={get(){try{return sessionStorage.getItem('fbKey')||''}catch{return ''}},set(v){try{v?sessionStorage.setItem('fbKey',v):sessionStorage.removeItem('fbKey')}catch{}}};
+const when=s=>new Date(s).toLocaleString('th-TH',{timeZone:'Asia/Vientiane',dateStyle:'medium',timeStyle:'short'});
+async function load(key){
+ $('error').textContent='';
+ try{const r=await fetch('/api/feedback/list',{headers:{'X-Admin-Key':key},cache:'no-store'});
+  if(r.status===401){$('error').textContent='รหัสไม่ถูกต้อง';store.set('');return}
+  if(!r.ok)throw new Error('HTTP '+r.status);data=await r.json();store.set(key);$('data').hidden=false;$('logout').hidden=false;render();loadVisits();loadPushDevices();loadFb()}
+ catch(e){$('error').textContent='โหลดไม่สำเร็จ ('+e.message+')'}
+}
+// Visitor counts: refreshed every 30 s while the page is open and visible.
+const DEVICE={mobile:'มือถือ',desktop:'คอมพิวเตอร์',other:'ไม่ทราบ'};
+const el=(tag,cls,text)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(text!==undefined)e.textContent=text;return e};
+async function loadVisits(){
+ const box=$('visits'),key=store.get();if(!key||document.hidden)return;
+ try{const r=await fetch('/api/visits/stats',{headers:{'X-Admin-Key':key},cache:'no-store'});if(!r.ok)throw new Error('HTTP '+r.status);renderVisits(await r.json())}
+ catch(e){box.replaceChildren(el('h2',null,'ผู้ใช้งาน'),el('p','error','โหลดสถิติไม่สำเร็จ ('+e.message+')'))}
+}
+function renderVisits(v){
+ const stat=(value,label,cls)=>{const d=el('div','stat'+(cls?' '+cls:''));const b=el('b');if(cls==='live')b.append(el('span','dot'));b.append(String(value));d.append(b,el('span',null,label));return d};
+ const week=v.last30.slice(-7).reduce((a,d)=>a+d.visitors,0);
+ const grid=el('div','stats');grid.append(stat(v.onlineNow,'กำลังใช้งานตอนนี้ (ใน '+v.onlineWindowMinutes+' นาทีล่าสุด)','live'),stat(v.today,'คนเข้าใช้วันนี้'),stat(v.yesterday,'เมื่อวาน'),stat(week,'รวม 7 วัน (นับซ้ำข้ามวัน)'));
+ const max=Math.max(1,...v.last30.map(d=>d.visitors)),bars=el('div','bars');
+ v.last30.forEach((d,i)=>{const b=el('div',i===v.last30.length-1?'today':'');b.style.height=Math.round(d.visitors/max*100)+'%';b.title=d.day+': '+d.visitors+' คน';bars.append(b)});
+ const axis=el('div','axis');axis.append(el('span',null,v.last30[0].day.slice(5)),el('span',null,'จำนวนคนต่อวัน 30 วันล่าสุด (สูงสุด '+max+')'),el('span',null,'วันนี้'));
+ const chips=(title,obj,names)=>{const w=el('div');w.style.marginTop='12px';w.append(el('div','meta',title));const c=el('div','chips');const items=Object.entries(obj).sort((a,b)=>b[1]-a[1]);if(!items.length)c.append(el('span',null,'–'));items.forEach(([k,n])=>c.append(el('span',null,(names?.[k]||k)+' '+n)));w.append(c);return w};
+ $('visits').replaceChildren(el('h2',null,'ผู้ใช้งาน'),grid,bars,axis,chips('ตอนนี้กำลังดูหน้า',v.onlineByView,VIEW),chips('อุปกรณ์วันนี้',v.todayDevices,DEVICE),chips('ประเทศวันนี้',v.todayCountries),el('p','meta','อัปเดต '+when(v.generatedAt)+' · โหลดใหม่เองทุก 30 วินาที · วันตามเวลาลาว · ไม่เก็บ IP หรือข้อมูลส่วนตัว'));
+}
+setInterval(()=>{if(data)loadVisits()},30000);
+// Facebook drafts (worker/fb-bot.mjs). Pictures are fetched with the admin key and shown as blobs.
+const FB_KIND={daily:'สรุปประจำวัน',weekly:'สรุป 7 วัน',storm:'เตือนพายุ',heat:'เตือนร้อนจัด',rain:'เตือนฝนหนัก',river:'เตือนน้ำขึ้น',enso:'เอลนีโญ ประจำเดือน'};
+const FB_STATUS={draft:'รออนุมัติ',approved:'จะโพสต์เองตามเวลา',posted:'โพสต์แล้ว',failed:'โพสต์ไม่สำเร็จ',skipped:'ข้าม',expired:'หมดอายุ'};
+const fbApi=(path,body)=>fetch(path,{method:body?'POST':'GET',headers:{'X-Admin-Key':store.get(),...(body?{'Content-Type':'application/json'}:{})},body:body?JSON.stringify(body):undefined,cache:'no-store'});
+let fbUrls=[];
+async function loadFb(){
+ $('fbError').textContent='';
+ try{const r=await fbApi('/api/fb/posts');if(!r.ok)throw new Error('HTTP '+r.status);renderFb(await r.json())}catch(e){$('fbList').replaceChildren(el('p','error','โหลดไม่สำเร็จ ('+e.message+')'))}
+}
+function renderFb(d){
+ $('fbStatus').textContent=d.configured?'✅ เชื่อมเพจแล้ว (Page ID '+d.pageId+')':'⚠️ ยังไม่ได้เชื่อมเพจ: กดอนุมัติได้ แต่จะยังไม่โพสต์จนกว่าจะใส่ FB_PAGE_ID และ FB_PAGE_TOKEN · ระหว่างนี้คัดลอกข้อความ + ดาวน์โหลดรูปไปโพสต์เองได้';
+ fbUrls.forEach(u=>URL.revokeObjectURL(u));fbUrls=[];
+ if(!d.posts.length){$('fbList').replaceChildren(el('p','empty','ยังไม่มีร่าง · ร่างแรกมาตอน 05:00 หรือ 17:00 เวลาลาว หรือกดปุ่ม "สร้างร่างตอนนี้"'));return}
+ $('fbList').replaceChildren(...d.posts.map(p=>{
+  const box=el('article','fbpost'),left=el('div'),right=el('div');
+  if(p.has_image){const img=el('img');img.alt='รูปโพสต์';left.append(img);fbApi('/api/fb/image/'+p.id).then(r=>r.ok?r.blob():null).then(b=>{if(!b)return;const u=URL.createObjectURL(b);fbUrls.push(u);img.src=u;const a=el('a',null,'ดาวน์โหลดรูป');a.href=u;a.download='laosafe-'+p.id+'.jpg';a.style.fontSize='.85rem';left.append(a)})}
+  else left.append(el('div','noimg',p.link?'โพสต์ลิงก์ (Facebook แสดงรูปจากลิงก์เอง): '+p.link:'ไม่มีรูป'));
+  const m=el('div','meta');const st=el('span','st st-'+p.status,FB_STATUS[p.status]||p.status);m.append(st,el('span','tag',FB_KIND[p.kind]||p.kind),el('span',null,'เวลาโพสต์ '+when(p.post_at)));if(p.posted_at)m.append(el('span',null,'โพสต์เมื่อ '+when(p.posted_at)));
+  const ta=el('textarea');ta.value=p.caption;ta.readOnly=p.status==='posted';ta.setAttribute('aria-label','ข้อความโพสต์');
+  const tools=el('div','tools');tools.style.marginTop='8px';
+  const act=(label,action,cls)=>{const b=el('button',cls,label);b.type='button';b.onclick=async()=>{b.disabled=true;try{const r=await fbApi('/api/fb/posts/'+p.id,{action,caption:ta.value});const j=await r.json();if(!r.ok||j.error)$('fbError').textContent='ไม่สำเร็จ: '+(j.error||r.status);else if(j.posted)$('fbError').textContent='';await loadFb()}catch(e){$('fbError').textContent='ไม่สำเร็จ ('+e.message+')'}b.disabled=false};return b};
+  if(['draft','failed','expired','skipped'].includes(p.status))tools.append(act(Date.parse(p.post_at)<=Date.now()?'อนุมัติ + โพสต์เลย':'อนุมัติ (โพสต์ตามเวลา)','approve'));
+  if(p.status==='approved')tools.append(act('ยกเลิกอนุมัติ','unapprove','secondary'));
+  if(['draft','approved','failed'].includes(p.status))tools.append(act('ข้าม','skip','secondary'));
+  const copy=el('button','secondary','คัดลอกข้อความ');copy.type='button';copy.onclick=()=>navigator.clipboard?.writeText(ta.value).then(()=>{copy.textContent='คัดลอกแล้ว ✓';setTimeout(()=>copy.textContent='คัดลอกข้อความ',1500)});tools.append(copy);
+  if(p.fb_id){const a=el('a',null,'เปิดโพสต์บน Facebook');a.href='https://www.facebook.com/'+encodeURIComponent(p.fb_id);a.target='_blank';a.rel='noopener';tools.append(a)}
+  right.append(m,ta,tools);if(p.error&&p.status!=='posted')right.append(el('p','error',p.error==='not_configured'?'ยังไม่ได้เชื่อมเพจ':'ข้อผิดพลาด: '+p.error));
+  box.append(left,right);return box}));
+}
+document.querySelectorAll('[data-make]').forEach(b=>b.addEventListener('click',async()=>{b.disabled=true;$('fbError').textContent='กำลังสร้างร่าง (ประมาณ 10–20 วินาที)…';try{const r=await fbApi('/api/fb/make',{slot:b.dataset.make});const j=await r.json();$('fbError').textContent=r.ok?'':'ไม่สำเร็จ: '+(j.error||r.status);await loadFb()}catch(e){$('fbError').textContent='ไม่สำเร็จ ('+e.message+')'}b.disabled=false}));
+$('fbReload').addEventListener('click',loadFb);
+// Phone-alert test (worker/push.mjs, owner's request 1 Nov 2026): sends at once to the ticked devices only.
+const PLATFORM={iphone:'📱 ไอโฟน',android:'🤖 แอนดรอยด์ / Chrome',firefox:'🦊 Firefox',windows:'💻 Windows',other:'อุปกรณ์อื่น'};
+const PKIND={storm:'พายุ',river:'น้ำขึ้น',rain:'ฝนหนัก',heat:'ร้อนจัด',daily:'อากาศทุกเช้า'};
+const DEAD_SENDS=6,DEAD_DAYS=14,DAY=86400000;   // same rule as worker/push.mjs pruneDead
+const via=p=>p==='iphone'?'แอปเปิล':p==='android'?'กูเกิล':'ระบบส่ง';
+const PSTATUS={sent:['📨 {via}รับแล้ว · รอมือถือตอบรับ…','st-approved'],acked:['📱 ขึ้นจอแล้ว ✓','st-posted'],silent:['⏳ {via}รับแล้ว แต่มือถือยังไม่ตอบรับ (เครื่องปิดอยู่ ไม่มีเน็ต แอปในเครื่องยังไม่อัปเดต หรือเป็นการสมัครเก่าที่ไม่ใช้แล้ว)','st-draft'],gone:['❌ เครื่องนี้หลุดจากระบบแล้ว (ลบออกจากรายชื่อให้แล้ว) · ต้องเปิดแจ้งเตือนใหม่ในเครื่องนั้น','st-failed'],failed:['⚠️ ส่งไม่สำเร็จ ลองใหม่อีกครั้ง','st-failed'],missing:['ไม่พบเครื่องนี้แล้ว · กดโหลดใหม่','st-skipped'],no_forecast:['ยังไม่มีพยากรณ์วันนี้ ลองใหม่อีกครั้ง','st-draft']};
+async function loadPushDevices(){
+ const box=$('pushDevices');$('pushMsg').textContent='';
+ try{const r=await fbApi('/api/push/admin/devices');if(r.status===404){box.replaceChildren(el('p','empty','ระบบแจ้งเตือนยังไม่ได้เปิด'));return}if(!r.ok)throw new Error('HTTP '+r.status);
+  const {devices}=await r.json();
+  if(!devices.length){box.replaceChildren(el('p','empty','ยังไม่มีเครื่องสมัครรับแจ้งเตือน'));return}
+  box.replaceChildren(...devices.map(d=>{const row=el('label','dev'),cb=el('input'),info=el('div'),m=el('div','meta'),life=el('div','meta'),st=el('span','st push-st');
+   cb.type='checkbox';cb.value=d.id;st.dataset.id=d.id;st.dataset.platform=d.platform;st.hidden=true;
+   m.append(el('span',null,'สมัคร '+when(d.created_at)),el('span',null,'รับ: '+d.kinds.map(k=>PKIND[k]||k).join(', ')),el('span','tag','รหัส '+d.id));
+   life.append(el('span',null,d.lastSeen?'💚 ขึ้นจอ / เปิดแอปล่าสุด '+when(d.lastSeen):'ยังไม่เคยตอบรับ (เริ่มนับตั้งแต่ 1 พ.ย. 2569)'));
+   if(d.pendingCount>0){const days=Math.floor((Date.now()-Date.parse(d.pendingSince))/DAY),left=Math.max(0,Math.ceil((Date.parse(d.pendingSince)+DEAD_DAYS*DAY-Date.now())/DAY));
+    life.append(el('span','st st-draft','⏳ ส่งไป '+d.pendingCount+' ครั้ง ไม่ตอบรับ · เงียบมา '+days+' วัน · '+(d.pendingCount>=DEAD_SENDS?'ระบบจะลบเองในอีก ~'+left+' วัน':'ระบบลบเองเมื่อครบ '+DEAD_SENDS+' ครั้ง และ '+DEAD_DAYS+' วัน')))}
+   const del=el('button','secondary','ลบเครื่องนี้');del.type='button';del.style.cssText='display:block;min-height:36px;margin-top:6px';
+   del.onclick=async e=>{e.preventDefault();if(!confirm('ลบ '+(PLATFORM[d.platform]||d.platform)+' · '+d.provinceName+' (รหัส '+d.id+') ออกจากรายชื่อ?\nเครื่องนี้จะไม่ได้รับแจ้งเตือนอีก จนกว่าเจ้าของจะเปิดแจ้งเตือนใหม่'))return;
+    del.disabled=true;try{const r=await fbApi('/api/push/admin/delete',{id:d.id});if(!r.ok)throw new Error('HTTP '+r.status);await loadPushDevices();$('pushMsg').textContent='ลบแล้ว · รหัส '+d.id}catch(x){$('pushMsg').textContent='ลบไม่สำเร็จ ('+x.message+')';del.disabled=false}};
+   info.append(el('b',null,(PLATFORM[d.platform]||d.platform)+' · '+d.provinceName),m,life,st,del);row.append(cb,info);return row}));
+ }catch(e){box.replaceChildren(el('p','error','โหลดไม่สำเร็จ ('+e.message+')'))}
+}
+document.querySelectorAll('[data-push]').forEach(b=>b.addEventListener('click',async()=>{
+ const ids=[...document.querySelectorAll('#pushDevices input:checked')].map(i=>i.value),msg=$('pushMsg'),btns=document.querySelectorAll('[data-push]');
+ if(!ids.length){msg.textContent='ติ๊กเลือกเครื่องก่อน';return}
+ if(ids.length>10){msg.textContent='เลือกได้ไม่เกิน 10 เครื่องต่อครั้ง';return}
+ if(b.dataset.push==='emergency'&&!confirm('ส่งแจ้งเตือนฉุกเฉิน (ทดสอบ) ไป '+ids.length+' เครื่อง?'))return;
+ btns.forEach(x=>x.disabled=true);msg.textContent='กำลังส่ง…';document.querySelectorAll('.push-st').forEach(s=>s.hidden=true);
+ try{const r=await fbApi('/api/push/admin/test',{type:b.dataset.push,ids});const j=await r.json();if(!r.ok)throw new Error(j.error||r.status);
+  for(const x of j.results)showPushStatus(x.id,x.status,x.code);
+  const waiting=j.results.filter(x=>x.status==='sent');
+  msg.textContent='แอปเปิล / กูเกิลรับแล้ว '+waiting.length+' จาก '+j.results.length+' เครื่อง · '+when(new Date().toISOString())+(waiting.length?' · รอมือถือตอบรับ (สูงสุด 45 วินาที)…':'');
+  if(waiting.length)await waitReceipts(waiting);
+ }catch(e){msg.textContent='ส่งไม่สำเร็จ ('+e.message+')'}
+ btns.forEach(x=>x.disabled=false);
+}));
+function showPushStatus(id,status,code){
+ const st=[...document.querySelectorAll('.push-st')].find(s=>s.dataset.id===id);if(!st)return;
+ const [t,c]=PSTATUS[status]||[status,''];st.textContent=t.replace('{via}',via(st.dataset.platform))+(code?' (HTTP '+code+')':'');st.className='st push-st '+c;st.hidden=false;
+}
+// The phone answers /api/push/ack after showing the alert; poll the device list until each test key comes back.
+async function waitReceipts(waiting){
+ let left=waiting.slice();
+ for(let i=0;i<15&&left.length;i++){
+  await new Promise(r=>setTimeout(r,3000));
+  try{const r=await fbApi('/api/push/admin/devices');if(!r.ok)continue;const {devices}=await r.json();
+   left=left.filter(x=>{const d=devices.find(v=>v.id===x.id);if(d&&d.ackKey===x.key){showPushStatus(x.id,'acked');return false}return true})}catch{}
+ }
+ left.forEach(x=>showPushStatus(x.id,'silent'));
+ $('pushMsg').textContent='ขึ้นจอแล้ว '+(waiting.length-left.length)+' จาก '+waiting.length+' เครื่อง · '+when(new Date().toISOString());
+}
+$('pushReload').addEventListener('click',loadPushDevices);
+document.addEventListener('visibilitychange',()=>{if(data&&!document.hidden)loadVisits()});
+function render(){
+ const s=$('stats');s.replaceChildren(...[['ทั้งหมด',data.count+' ข้อความ'],['คะแนนเฉลี่ย',data.averageRating===null?'–':data.averageRating+' / 5'],...Object.entries(data.byTopic).map(([k,v])=>[TOPIC[k]||k,v])].map(([a,b])=>{const d=document.createElement('div');d.className='stat';const x=document.createElement('b');x.textContent=b;const y=document.createElement('span');y.textContent=a;d.append(x,y);return d}));
+ const f=$('topic').value,rows=data.entries.filter(e=>!f||(e.topic||'none')===f),list=$('list');
+ if(!rows.length){list.innerHTML='<p class="empty">ยังไม่มีความคิดเห็น</p>';return}
+ list.replaceChildren(...rows.map(e=>{const d=document.createElement('article');d.className='entry';const m=document.createElement('div');m.className='meta';
+  const parts=[when(e.created_at),e.rating?'★'.repeat(e.rating)+'☆'.repeat(5-e.rating):null,e.topic?TOPIC[e.topic]:null,e.view?'หน้า '+(VIEW[e.view]||e.view):null,e.viewport?'จอ '+e.viewport:null,e.country||null].filter(Boolean);
+  parts.forEach((p,i)=>{const sp=document.createElement('span');sp.textContent=p;if(i===1&&e.rating)sp.className='stars';if(e.topic&&p===TOPIC[e.topic])sp.className='tag';m.append(sp)});
+  const t=document.createElement('div');t.className='msg';t.textContent=e.message||'(ไม่มีข้อความ ให้แค่คะแนน)';d.append(m,t);return d}));
+}
+$('login').addEventListener('submit',e=>{e.preventDefault();load($('key').value.trim())});
+$('logout').addEventListener('click',()=>{store.set('');data=null;$('data').hidden=true;$('logout').hidden=true;$('key').value=''});
+$('topic').addEventListener('change',()=>data&&render());$('reload').addEventListener('click',()=>load(store.get()||$('key').value.trim()));$('csv').addEventListener('click',()=>{if(!data)return;const q=v=>'"'+String(v??'').replace(/"/g,'""')+'"';const csv='﻿'+['id,created_at,rating,topic,message,view,viewport,country',...data.entries.map(e=>[e.id,e.created_at,e.rating,e.topic,e.message,e.view,e.viewport,e.country].map(q).join(','))].join('\r\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='feedback-'+new Date().toISOString().slice(0,10)+'.csv';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)});
+if(store.get())load(store.get());
+</script>
+</body>
+</html>

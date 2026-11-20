@@ -1,0 +1,31 @@
+# Security headers for the static files (Cloudflare Workers static assets, 26 Oct 2026).
+# Pages made by the Worker (/weather, /storm/*, /api/*) get the same headers in cloudflare-site/worker.mjs.
+# No Content-Security-Policy yet: the map loads imagery from many hosts (NASA, JMA, TMD, Esri…),
+# a wrong list would blank the map.
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: SAMEORIGIN
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: geolocation=(self), camera=(), microphone=(), payment=(), usb=()
+  Strict-Transport-Security: max-age=31536000
+
+/admin.html
+  Cache-Control: no-store
+  X-Robots-Tag: noindex, nofollow
+
+# Browser cache (26 Oct 2026: repeat visits re-checked every file, slow on Lao mobile networks).
+# Pages (/ and .html) keep Cloudflare's default (check every time), so a deploy is seen at once; they
+# load scripts and styles by ?v= addresses, which change whenever a file changes (verify-security.mjs).
+# Only one Cache-Control rule may match a path.
+/vendor/*.mjs
+  Cache-Control: public, max-age=31536000, immutable
+/*.js
+  Cache-Control: public, max-age=86400
+/*.css
+  Cache-Control: public, max-age=86400
+/data/*
+  Cache-Control: public, max-age=3600
+/*.svg
+  Cache-Control: public, max-age=86400
+/og/*
+  Cache-Control: public, max-age=86400

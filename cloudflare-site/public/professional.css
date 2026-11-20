@@ -1,0 +1,175 @@
+/* A compact operational map surface. Existing controls and IDs are retained. */
+:root{--navy:#142c49;--blue:#245de5;--ink:#20324b;--muted:#617187;--line:#dfe6ef;--shadow:0 8px 26px #102b4526}
+.topbar{height:68px;min-height:68px;background:#142c49;color:#fff;padding:0 22px;border:0;gap:20px}
+.brand{gap:12px}.brand-icon{background:#224769;color:#77d9f2;width:40px;height:40px;border-radius:10px}.brand h1{color:#fff;font-size:1.2rem;font-weight:700;letter-spacing:0}.brand p{color:#b8c9dd;font-size:.8125rem;line-height:1.5}
+.nav{gap:3px}.nav button{color:#c5d3e3;font-size:.875rem;padding:10px 14px;border-radius:8px;min-height:44px}.nav button.active,.nav button:hover{background:#ffffff17;color:#fff}.nav .ai-nav-button{background:#274668;color:#d6f4ff;border:1px solid #416083}
+.prototype{background:#f4f7fb;color:#64748b;border-bottom:1px solid #dfe6ef;font-size:.75rem;line-height:1.6;padding:3px 18px;text-align:left}
+.workspace{background:#c7d6df}.map-hint{display:none}
+.weather-panel-toggle,.layers-panel-toggle{top:18px;border:1px solid #dbe4ed;border-radius:9px;background:#fff;color:#263f60;box-shadow:0 4px 14px #102b4526;font-size:.875rem;min-height:44px;padding:10px 15px}
+.weather-panel-toggle{left:18px}.layers-panel-toggle{right:18px}
+.left-panel,.right-panel{top:74px;bottom:224px;max-height:none;border-radius:12px;background:#f6f8fb;border:1px solid #dfe6ef;width:342px;padding:12px;box-shadow:0 10px 28px #102b4530}.left-panel{left:18px}.right-panel{right:18px}
+.panel{border-radius:10px;border:1px solid #e0e7ee;background:#fff;padding:16px;box-shadow:none}.panel h2{font-size:1rem;line-height:1.6;color:#203c60}.small,.description,.layer-title{font-size:.875rem;line-height:1.7}.description{color:#65758b}.close-mobile{font-size:1rem;color:#253f60}.close-mobile button{background:#e9eef5;color:#415875;border-radius:8px}
+.layer-tabs{border-radius:8px;background:#e8edf4}.layer-tabs button{font-size:.875rem;border-radius:6px}.layer-tabs button.active{color:#245de5;box-shadow:0 1px 4px #19365212}.layer-row{padding:13px 0;min-height:72px}.layer-symbol{border-radius:8px;background:#edf3ff;color:#245de5}.switch:checked{background:#245de5}.switch{flex-shrink:0}
+select{border:1px solid #d2dce8;background:#fff;border-radius:8px;color:#263f60;min-height:44px;font-size:.875rem}.metric{background:#f7f9fc;border-color:#e2e8f0;border-radius:9px;min-height:105px;padding:12px}.metric-value{color:#163e68;font-size:1.7rem}.metric-note,.search-summary,.terrain-credit{font-size:.8125rem;line-height:1.6}.metric-label{font-size:.875rem}.metric-label span{color:#245de5}.risk-box{border-radius:9px;background:#fff8e8;border-color:#efe2bf}.risk-box p{font-size:.875rem;line-height:1.7}
+.selected-place,.feed-health>div{background:#f5f8fc;border:1px solid #dee6ef;border-radius:9px}.feed-health strong,.feed-health span,.feed-check{font-size:.875rem}.feed-status{background:#eef4fc;border-radius:8px;font-size:.875rem}.feed-health button,.link-button,.gps{background:#eaf1ff;color:#245de5;border-radius:8px}.radar-agencies a{border-radius:9px;background:#fff;font-size:.875rem}
+.timeline{left:18px;right:18px;transform:none;bottom:45px;width:auto;max-width:none;display:grid;grid-template-columns:176px minmax(180px,1fr) 124px 76px;grid-template-rows:auto auto auto;gap:8px 16px;background:#fff;border:1px solid #dce5ef;border-radius:12px;padding:14px 18px;box-shadow:0 7px 30px #102b4536;z-index:3}
+.timeline-mode{grid-row:1;grid-column:2/5;justify-self:end;margin:0;padding:3px;background:#eef2f7;border-radius:8px;gap:3px;max-width:560px;width:100%;align-self:start}.timeline-mode button{font-size:.875rem;min-height:40px;padding:6px 14px;border-radius:6px;font-weight:500;white-space:nowrap}.timeline-mode button[aria-pressed=true]{background:#fff;color:#245de5;box-shadow:0 1px 5px #1d365d1a}
+.timeline-head{grid-row:1;grid-column:1/2;display:flex;flex-direction:column;align-items:flex-start;gap:1px;margin:0;min-width:0;line-height:1.4}.timeline-head strong{font-size:.8125rem;font-weight:500;color:#63768d;white-space:nowrap}.timeline-head .frame-label{display:none}.timeline-head #frameTime{font-size:1.12rem;color:#173d68;font-weight:700;white-space:nowrap;line-height:1.6}
+.timeline-source{grid-row:2;grid-column:1;min-width:0;display:block}.timeline-source select{width:100%;height:44px;margin:0;font-size:.875rem}.timeline-controls{grid-row:2;grid-column:2;gap:13px;min-width:0}.timeline-controls button{min-width:84px;width:84px;height:44px;min-height:44px;background:#245de5;border-radius:8px;font-size:.875rem;color:white;white-space:nowrap}.timeline-controls input{width:100%;height:44px;accent-color:#245de5;margin:0}.timeline-controls input::-webkit-slider-runnable-track{height:5px;background:#d8e3f3}.timeline-controls input::-webkit-slider-thumb{background:#245de5;width:20px;height:20px;margin-top:-7px}
+.latest-button{grid-row:2;grid-column:3;border-radius:8px;min-height:44px;background:#edf2f9;color:#375473;font-size:.875rem;padding:7px;white-space:nowrap}.latest-button[aria-pressed=true]{background:#eaf1ff;color:#245de5}
+.playback-speed{grid-row:2;grid-column:4;justify-content:flex-end}.playback-speed>span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}.playback-speed select{width:76px;min-height:44px;border-radius:8px;font-size:.875rem}
+.timeline-freshness{grid-row:3;grid-column:1/4;margin:0;font-size:.875rem;color:#526984;line-height:1.5}.playback-status{grid-row:4;grid-column:1/-1;font-size:.875rem;margin:0;color:#526984;line-height:1.6}.timeline-legend{grid-row:3;grid-column:4;justify-self:end;position:relative;margin:0;overflow:visible!important;max-height:none!important}.timeline-legend summary{font-size:.8125rem;min-height:24px;line-height:1.5;white-space:nowrap;color:#375473}.timeline-legend[open]{grid-column:1/-1;justify-self:stretch;display:grid;grid-template-columns:1fr auto;gap:8px;max-height:170px!important;overflow:auto!important}.timeline-legend[open] summary{grid-column:1/-1}.timeline-coverage{font-size:.8125rem;margin:0}.timeline-legend .legend{font-size:.875rem;padding:0;line-height:1.6}.cloud-legend{max-height:70px;max-width:330px}
+.forecast-model-label{grid-row:2;grid-column:1;font-size:.875rem}.forecast-point-status{grid-row:4;grid-column:1/-1;font-size:.875rem}.workspace[data-time-mode=forecast] .playback-status,.workspace[data-time-mode=motion] .playback-status{grid-row:5}
+.sos-float{left:auto;right:18px;bottom:calc(var(--timeline-height,184px) + 65px);transform:none;background:#fff;color:#9c3349;border:1px solid #deb8c1;border-radius:8px;min-height:44px;padding:8px 13px;box-shadow:0 3px 12px #102b4520;font-size:.875rem}.sos-float small{font-size:.75rem}
+.footerbar{height:31px;min-height:31px;background:#f5f8fbed;border-color:#dce5ef;color:#63758a;font-size:.75rem;padding:4px 18px}.footerbar strong{font-size:.75rem;font-weight:500;color:#63758a}.maplibregl-ctrl-top-right{right:18px;top:78px}.workspace[data-view=layers] .maplibregl-ctrl-top-right{right:380px}.maplibregl-ctrl-bottom-left{bottom:calc(var(--timeline-height,184px) + 65px);left:18px}.maplibregl-ctrl-bottom-right{bottom:31px}.maplibregl-ctrl-group{border-radius:8px;overflow:hidden;box-shadow:0 2px 12px #102b4522}.maplibregl-ctrl-group button{width:36px;height:36px}
+.dialog-head{background:#f7f9fc;border-color:#dfe6ef}.dialog-head h2{font-size:1.2rem;color:#203c60}.dialog-head button{border-radius:8px;background:#e9eef5}.source-card{border-radius:10px;background:#fff;border-color:#dfe6ef}.source-card h3{font-size:1rem;color:#203c60}.source-card p{font-size:.875rem;line-height:1.8}.source-card .badge{border-radius:5px}.source-footer{background:#f2f6fc}.badge.live{background:#eaf1ff;color:#245de5}.toast{background:#142c49;border-radius:9px;font-size:.875rem}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #4e88fb;outline-offset:3px}button:disabled{opacity:.5;cursor:not-allowed}
+@media(min-width:1500px){.left-panel,.right-panel{width:360px}.workspace[data-view=layers] .maplibregl-ctrl-top-right{right:398px}.timeline{left:18px;right:18px;max-width:1060px;margin:auto}.timeline-head #frameTime{font-size:1.25rem}}
+@media(max-width:1100px) and (min-width:761px){.topbar{padding:0 18px;gap:10px}.brand h1{font-size:1.05rem}.brand p{display:block;font-size:.75rem}.nav button{padding:9px 10px;font-size:.8125rem}.left-panel,.right-panel{width:318px}.workspace[data-view=layers] .maplibregl-ctrl-top-right{right:352px}.timeline{grid-template-columns:164px minmax(160px,1fr) 116px 70px;gap:7px 12px;padding:12px 16px}.timeline-head #frameTime{font-size:1.05rem}.timeline-mode button{padding:6px 10px;font-size:.8125rem}.playback-speed select{width:70px}}
+@media(max-width:760px){
+ .topbar{height:64px;min-height:64px;padding:8px 14px}.brand h1{font-size:1.1rem}.brand p{font-size:.75rem}.brand-icon{width:37px;height:37px;border-radius:8px}.prototype{font-size:.75rem;padding:3px 12px;line-height:1.5}
+ .weather-panel-toggle,.layers-panel-toggle{top:12px;min-height:44px;font-size:.875rem;padding:8px 11px;border-radius:8px}.weather-panel-toggle{left:12px;max-width:58%}.layers-panel-toggle{right:12px;max-width:38%}
+ .timeline{left:10px;right:10px;bottom:36px;width:auto;border-radius:10px;padding:11px 12px;grid-template-columns:minmax(0,1fr) 118px 64px;grid-template-rows:auto auto auto auto;gap:7px 9px}
+ .timeline-head{grid-row:1;grid-column:1/-1;display:flex;flex-direction:row;align-items:baseline;justify-content:space-between;gap:8px;flex-wrap:wrap}.timeline-head strong{font-size:.8125rem}.timeline-head #frameTime{font-size:1.05rem;white-space:normal}.timeline-mode{grid-row:2;grid-column:1/-1;max-width:none;justify-self:stretch}.timeline-mode button{min-height:40px;font-size:.8125rem;padding:6px 5px;white-space:normal;line-height:1.5}
+ .timeline-source{grid-row:3;grid-column:1}.timeline-source select{min-height:44px;font-size:.875rem}.latest-button{grid-row:3;grid-column:2;min-height:44px;font-size:.8125rem}.playback-speed{grid-row:3;grid-column:3}.playback-speed select{width:64px;font-size:.875rem}
+ .timeline-controls{grid-row:4;grid-column:1/-1;gap:12px}.timeline-controls button{min-width:80px;width:80px;font-size:.875rem}.timeline-freshness{grid-row:5;grid-column:1/-1;font-size:.8125rem;line-height:1.6}.timeline-legend{grid-row:6;grid-column:1/-1;justify-self:start}.timeline-legend summary{font-size:.8125rem}.timeline-legend[open]{display:block;max-height:150px!important}.timeline-coverage{margin:8px 0}.timeline-legend .legend{font-size:.8125rem}
+ .playback-status{grid-row:7;font-size:.8125rem}.forecast-model-label{grid-row:3;grid-column:1/3;font-size:.8125rem}.forecast-point-status{grid-row:7;font-size:.8125rem}.workspace[data-time-mode=forecast] .playback-status,.workspace[data-time-mode=motion] .playback-status{grid-row:8}
+ .left-panel,.right-panel{top:68px;bottom:8px;left:8px;right:8px;width:auto;max-height:none;z-index:5;background:#f6f8fb;border-radius:12px;padding:12px}.close-mobile{position:sticky;top:-12px;background:#f6f8fb;padding-top:5px}.layer-tabs{position:sticky;top:43px;z-index:2}.panel{padding:14px}.workspace[data-view=weather] .timeline,.workspace[data-view=layers] .timeline{visibility:hidden}.metric{min-height:98px}.small,.description,.layer-title{font-size:.875rem}
+ .sos-float{right:12px;bottom:calc(var(--timeline-height,290px) + 48px);font-size:.8125rem;min-height:44px;padding:7px 10px}.sos-float small{font-size:.75rem}.maplibregl-ctrl-top-right,.workspace[data-view=layers] .maplibregl-ctrl-top-right{right:12px;top:69px}.maplibregl-ctrl-bottom-left{left:12px;bottom:calc(var(--timeline-height,290px) + 49px)}.footerbar{height:27px;min-height:27px;padding:3px 12px;font-size:.75rem}.maplibregl-ctrl-bottom-right{bottom:27px}
+ .mobile-nav{min-height:61px;background:#142c49;color:#d4e1f2;border:0;padding:4px 6px calc(4px + env(safe-area-inset-bottom));gap:3px}.mobile-nav button{background:transparent;color:#b6c8dd;font-size:.75rem;border-radius:7px;min-height:49px;line-height:1.5}.mobile-nav button.active{background:#284967;color:#fff}.mobile-nav button span{font-size:19px}.mobile-nav [data-ai-open]{color:#b8eaf6}
+}
+@media(max-width:380px){.timeline{grid-template-columns:minmax(0,1fr) 110px 60px;gap:6px}.timeline-source select{font-size:.8125rem}.playback-speed select{width:60px}.timeline-head #frameTime{font-size:1rem}.timeline-mode button{font-size:.75rem}}
+@media(min-width:761px) and (max-width:1100px){.workspace[data-time-mode=motion] .timeline-head strong,.workspace[data-time-mode=forecast] .timeline-head strong{white-space:normal}.workspace[data-time-mode=motion] .timeline-head #frameTime,.workspace[data-time-mode=forecast] .timeline-head #frameTime{white-space:normal;max-width:100%;font-size:.95rem;overflow-wrap:break-word}}
+/* ---------- Layout cleanup (9 Oct 2026) ----------
+   One control per job, nothing stacked on top of anything else:
+   - Weather / layer panels open from the top nav (desktop) or bottom nav (phone);
+     the duplicate floating panel buttons are hidden.
+   - Map top-left: layer switch. Map top-right: SOS, then zoom (desktop only).
+   - The layer switch replaces the timeline's layer select.
+   - Time bar: title + time | modes; Run + slider | latest | speed; then status lines. */
+.weather-panel-toggle,.layers-panel-toggle,.timeline-source,.map-hint{display:none!important}
+.quick-layers{position:absolute;top:14px;left:14px;z-index:4;display:flex;gap:2px;padding:3px;background:#fff;border:1px solid #dbe4ed;border-radius:10px;box-shadow:0 4px 14px #102b4526}
+.quick-layers button{display:flex;align-items:center;gap:6px;min-height:38px;padding:6px 14px;border-radius:7px;background:transparent;color:#36506f;font-size:.875rem;font-weight:500;white-space:nowrap}
+.quick-layers button i{font-style:normal;font-size:1rem;line-height:1}
+.quick-layers button:hover{background:#eef3fa}
+.quick-layers button[aria-pressed=true]{background:#245de5;color:#fff}
+.workspace[data-view=weather] .quick-layers,.workspace[data-view=weather] .maplibregl-ctrl-bottom-left{left:374px}
+.sos-float{top:14px;right:14px;bottom:auto;left:auto;display:flex;flex-direction:column;align-items:center;line-height:1.3}
+.maplibregl-ctrl-top-right{top:72px;right:14px}
+.maplibregl-ctrl-bottom-left{bottom:calc(var(--timeline-height,190px) + var(--attribution-height,20px) + 45px)}
+.workspace[data-view=layers] .sos-float{right:376px}
+.left-panel,.right-panel{top:68px;bottom:calc(var(--timeline-height,190px) + var(--attribution-height,20px) + 47px)}
+.timeline{bottom:calc(37px + var(--attribution-height,20px));grid-template-columns:minmax(0,1fr) auto auto;grid-template-rows:none;grid-auto-rows:auto;gap:8px 12px;align-items:center}
+.timeline-head{grid-row:1;grid-column:1}
+.timeline-mode{grid-row:1;grid-column:2/4;justify-self:end;width:auto;max-width:none}
+.timeline-controls{grid-row:2;grid-column:1;min-width:0}
+.latest-button{grid-row:2;grid-column:2;padding:7px 14px}
+.playback-speed{grid-row:2;grid-column:3}
+.forecast-model-label,.playback-status,.timeline-freshness,.forecast-point-status,.timeline-legend{grid-row:auto;grid-column:1/-1;justify-self:start;margin:0}
+.timeline-legend[open]{grid-column:1/-1;justify-self:stretch}
+.playback-status:empty,.timeline-freshness:empty,.forecast-point-status:empty{display:none}
+.timeline-freshness,.playback-status,.forecast-point-status,.forecast-model-label{font-size:.8125rem;line-height:1.5;color:#5b6f86}
+.workspace[data-time-mode=forecast] .playback-status,.workspace[data-time-mode=motion] .playback-status{grid-row:auto}
+@media(max-width:1100px){.workspace[data-view=weather] .quick-layers,.workspace[data-view=layers] .quick-layers{display:none}}
+@media(max-width:760px){
+ .quick-layers{top:10px;left:10px;right:auto}.quick-layers button{min-height:40px;padding:6px 10px;font-size:.8125rem}
+ @media(max-width:420px){.quick-layers button{padding:6px 8px}.quick-layers button i{display:none}}
+ .maplibregl-ctrl-top-right,.workspace[data-view=layers] .maplibregl-ctrl-top-right{display:none}
+ .sos-float{top:10px;right:10px;bottom:auto;min-height:40px;padding:6px 10px;font-size:.8125rem}.sos-float small{display:none}
+ .workspace[data-view=weather] .sos-float,.workspace[data-view=layers] .sos-float{display:none}
+ .footerbar{display:none}
+ .left-panel,.right-panel{top:8px;bottom:8px}
+ .timeline{left:8px;right:8px;bottom:calc(4px + var(--attribution-height,24px));padding:10px 12px;gap:8px;grid-template-columns:minmax(0,1fr) auto auto}
+ .timeline-head{grid-column:1/-1;flex-direction:row;align-items:baseline;justify-content:space-between}
+ .timeline-mode{grid-row:2;grid-column:1/-1;justify-self:stretch}
+ .timeline-mode button{min-height:36px;padding:4px 6px}
+ .timeline-controls{grid-row:3;grid-column:1;gap:10px}.timeline-controls button{min-width:76px;width:76px}
+ .latest-button{grid-row:3;grid-column:2;padding:6px 10px}
+ .playback-speed{grid-row:3;grid-column:3}
+ .maplibregl-ctrl-bottom-left{display:none}
+ .maplibregl-ctrl-bottom-right{bottom:0}
+}/* ---------- Compact time bar ----------
+   Desktop: one control row (time · Run + slider · latest · speed · mode) and one
+   status row with the legend link. Tablet/phone: mode row, control row, status row. */
+.timeline{padding:10px 14px;gap:6px 12px}
+.timeline-head{gap:0}.timeline-head strong{font-size:.75rem;line-height:1.3}.timeline-head #frameTime{font-size:1rem;line-height:1.4}
+.timeline-mode{padding:2px}.timeline-mode button{min-height:34px;padding:4px 12px;font-size:.8125rem}
+.timeline-controls{gap:10px}.timeline-controls button{height:36px;min-height:36px;width:80px;min-width:80px}.timeline-controls input{height:36px}
+.latest-button{min-height:36px;padding:4px 12px;font-size:.8125rem}
+.playback-speed select{min-height:36px;height:36px;width:64px}
+.timeline-freshness{grid-row:2;grid-column:1/3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;justify-self:stretch}
+.timeline-legend{grid-row:2;grid-column:3;justify-self:end}
+.timeline-legend[open]{grid-row:auto;grid-column:1/-1}
+@media(min-width:1101px){
+ .timeline{left:50%;right:auto;transform:translateX(-50%);width:calc(100% - 28px);max-width:1180px;grid-template-columns:auto minmax(160px,1fr) auto auto auto}
+ .timeline-head{grid-row:1;grid-column:1;min-width:150px}
+ .timeline-controls{grid-row:1;grid-column:2}
+ .latest-button{grid-row:1;grid-column:3}
+ .playback-speed{grid-row:1;grid-column:4}
+ .timeline-mode{grid-row:1;grid-column:5;justify-self:end}
+ .timeline-freshness{grid-column:1/5}
+ .timeline-legend{grid-column:5}
+}
+@media(max-width:760px){
+ .timeline{padding:8px 10px;gap:6px 8px}
+ .timeline-head strong{font-size:.75rem}.timeline-head #frameTime{font-size:.95rem}
+ .timeline-mode button{min-height:34px;padding:2px 4px;font-size:.75rem}
+ .timeline-controls button{width:72px;min-width:72px;height:38px;min-height:38px}
+ .latest-button{min-height:38px;padding:4px 8px;font-size:.75rem}
+ .playback-speed select{min-height:38px;height:38px;width:58px}
+ .timeline-freshness{grid-row:4;font-size:.75rem}
+ .timeline-legend{grid-row:4}.timeline-legend summary{font-size:.75rem}
+ .timeline-freshness,.playback-status,.forecast-point-status,.forecast-model-label{font-size:.75rem}
+}
+.forecast-model-label{display:none!important}
+@media(max-width:760px){
+ /* Phone: the layer buttons already name the layer, so row 1 is just the time + legend link;
+    one status line at most (a playback message replaces the freshness line). */
+ .timeline-head strong{display:none}
+ .timeline-head{grid-row:1;grid-column:1/3}
+ .timeline-legend{grid-row:1;grid-column:3;align-self:center}
+ .timeline-legend[open]{grid-row:auto;grid-column:1/-1}
+ .timeline-freshness{grid-row:auto;grid-column:1/-1}
+ .playback-status:not(:empty)~.timeline-freshness{display:none}
+}
+@media(min-width:761px) and (max-width:1100px){.timeline-freshness{grid-row:3}.timeline-legend{grid-row:3}.timeline-legend[open]{grid-row:auto}}
+/* MRC rain gauges: pill = measured 24-hour total (mm); small ring = no rain; faded = station silent >3 h. */
+.gauge{min-width:24px;height:22px;padding:0 6px;border-radius:11px;background:var(--gauge,#1e6fd9);color:#fff;font:700 11px/18px system-ui,sans-serif;border:2px solid #fff;box-shadow:0 1px 4px #0006;cursor:pointer}
+.gauge.light{color:#0d2d52}
+.gauge.dry{min-width:0;width:11px;height:11px;padding:0;background:#fff;border:2px solid #56708c;box-shadow:0 0 0 1px #fff8}
+.gauge.stale{opacity:.45;border-style:dashed}
+.gauge:focus-visible{outline:3px solid #4e88fb;outline-offset:2px}
+.gauge-key{display:flex;flex-wrap:wrap;align-items:center;gap:3px 6px;margin-top:4px;font-size:.75rem;color:#5b6f86}
+.gauge-key i{display:inline-block;width:10px;height:10px;border-radius:5px}.gauge-key i.dry{background:#fff;border:2px solid #56708c;width:9px;height:9px}
+.gauge-summary{margin:10px 0;padding:8px 10px;background:#eef5ff;border-radius:8px;color:#1d4f86}
+.pond-panel select{width:100%;margin:2px 0 8px}
+.pond-run{width:100%;min-height:44px;margin:4px 0 8px;border-radius:8px;background:#0b7fa8;color:#fff;font-weight:600;font-size:.9rem}
+.pond-run:disabled{opacity:.6}
+.pond-list{margin:6px 0 4px;padding-left:20px;display:grid;gap:4px}.pond-list .link-button{width:100%;text-align:left;font-size:.8125rem;padding:6px 8px}
+/* Alerts and news (weather panel) and the map banner. */
+.alert-list,.news-list{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.alert-item{display:grid;gap:2px;padding:8px 10px;border-radius:8px;border-left:4px solid #c62828;background:#fff4f2;font-size:.8125rem;line-height:1.5}
+.alert-item.dam{border-color:#6a3fb5;background:#f5f0ff}.alert-item.river{border-color:#ef6c00;background:#fff6ec}.alert-item.rain{border-color:#c62828;background:#fdeeee}
+.alert-item strong{color:#1f2f45;font-size:.875rem}.alert-item span{color:#4d6178}.alert-item a{font-size:.75rem}
+.news-heading{font-size:.875rem;margin:12px 0 6px;color:#203c60}
+.news-list li{display:grid;gap:1px;padding:6px 0;border-bottom:1px solid #edf1f6;font-size:.8125rem;line-height:1.5}.news-list li:last-child{border-bottom:0}
+.news-list span{color:#6b7c90;font-size:.75rem}.alert-links{margin-top:8px}.alert-note{color:#6b7c90;font-size:.75rem!important}
+.alert-banner{position:absolute;z-index:4;top:14px;left:300px;right:150px;max-width:560px;display:flex;align-items:center;gap:8px;min-height:40px;padding:6px 12px;border-radius:10px;background:#fff4f2;border:1px solid #f0c4bd;color:#8a1f12;font-size:.8125rem;font-weight:600;text-align:left;box-shadow:0 4px 14px #102b4526;cursor:pointer}
+.alert-banner span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.alert-banner[hidden]{display:none}
+.workspace[data-view=weather] .alert-banner,.workspace[data-view=layers] .alert-banner{display:none}
+.gauge.river-rising{box-shadow:0 0 0 3px #ef6c00,0 1px 4px #0006}.gauge.river-alarm{box-shadow:0 0 0 3px #e53935,0 1px 4px #0006}.gauge.river-flood{box-shadow:0 0 0 4px #b71c1c,0 1px 4px #0006}
+@media(max-width:760px){.alert-banner{top:58px;left:10px;right:10px;max-width:none}}
+/* Official page links: large tap targets; Facebook links open the app on phones. */
+.page-links{display:grid;gap:6px}
+.page-link{display:grid;gap:1px;padding:9px 12px 9px 40px;border-radius:9px;border:1px solid #dbe4ed;background:#fff;text-decoration:none;position:relative;color:#1f2f45}
+.page-link::before{content:'↗';position:absolute;left:12px;top:50%;transform:translateY(-50%);width:20px;height:20px;border-radius:5px;background:#e9eef5;color:#36506f;display:grid;place-items:center;font-size:.75rem;font-weight:700}
+.page-link.facebook::before{content:'f';background:#1877f2;color:#fff;font-family:Arial,sans-serif;font-size:.9rem}
+.page-link strong{font-size:.875rem}.page-link span{font-size:.75rem;color:#6b7c90}.page-link:hover{border-color:#9fb6d3;background:#f7faff}
+/* News view: same panel position as the weather panel, separate content and menu. */
+.workspace[data-view=news] .quick-layers,.workspace[data-view=news] .maplibregl-ctrl-bottom-left{left:374px}
+.workspace[data-view=news] .alert-banner{display:none}
+@media(max-width:1100px){.workspace[data-view=news] .quick-layers{display:none}}
+@media(max-width:760px){.workspace[data-view=news] #newsPanel{display:block}.workspace[data-view=news] .timeline{visibility:hidden}.workspace[data-view=news] .sos-float{display:none}.mobile-nav button span{line-height:1.2}}
+.news-panel .alert-note{margin:0 0 8px}
+/* One line in every layout, so loading text never changes the time bar's height. */
+.timeline-freshness{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;max-width:100%;justify-self:stretch}

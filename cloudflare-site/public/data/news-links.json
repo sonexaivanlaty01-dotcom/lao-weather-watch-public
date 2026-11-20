@@ -1,0 +1,16 @@
+{
+ "kind": "news_links",
+ "about": "Official pages shown under 'ເພຈຂ່າວ'. One entry per page: name, short note and an https link. On phones a Facebook link opens the Facebook app.",
+ "links": [
+  {
+   "name": "ກົມອຸຕຸນິຍົມ ແລະ ອຸທົກກະສາດ",
+   "note": "ແຈ້ງເຕືອນ ແລະ ພະຍາກອນອາກາດ",
+   "url": "https://www.facebook.com/profile.php?id=100066540918462"
+  },
+  {
+   "name": "ສຳນັກຂ່າວສານປະເທດລາວ (KPL)",
+   "note": "ຂ່າວທາງການ",
+   "url": "https://www.facebook.com/LaoNewsAgency"
+  }
+ ]
+}
